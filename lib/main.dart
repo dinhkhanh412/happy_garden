@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:happy_garden/ui/home/homepage.dart';
+import 'package:happy_garden/ui/page/home/homepage.dart';
 
 void main() {
   runApp(MyApp());
