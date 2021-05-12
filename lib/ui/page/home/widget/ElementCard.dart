@@ -37,6 +37,7 @@ Padding cardStat(context, String name, IconData icon, String status) {
     padding: EdgeInsets.all(0.0),
     child: Card(
       child: Column(
+        
         children: [
           SizedBox(height: 5),
           Text(
