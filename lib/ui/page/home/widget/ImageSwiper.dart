@@ -1,9 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
 
-var images = ['images/plant_1.jpg', 'images/plant_2.jpg', 'images/plant_3.jpg'];
+var images = [
+  'assets/images/plant_1.jpg',
+  'assets/images/plant_2.jpg',
+  'assets/images/plant_3.jpg'
+];
 
-Swiper imageSwiper(context) {
+Swiper imageSwiper(context, constrains) {
   return new Swiper(
     autoplay: true,
     autoplayDelay: 5000,
@@ -19,7 +24,7 @@ Swiper imageSwiper(context) {
         builder:
             DotSwiperPaginationBuilder(color: Color(0xffD2EDE3), activeColor: Color(0xff0C9359))),
     itemCount: images.length,
-    viewportFraction: 0.75,
+    viewportFraction: 0.85,
     scale: 0.9,
   );
 }
