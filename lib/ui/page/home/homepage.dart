@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:happy_garden/ui/page/home/widget/ImageSwiper.dart';
 import 'package:happy_garden/ui/page/home/widget/ElementCard.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 class HomeScreen extends StatefulWidget {
   final String UID;
@@ -47,39 +48,35 @@ class _HomeScreenState extends State<HomeScreen> {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Container(
-                  constraints: BoxConstraints.expand(
-                      height: constrains.maxWidth * 0.3, width: constrains.maxWidth * 0.3),
-                  child: card(context, "Humidity", Icons.cloud, "Love"),
+                GestureDetector(
+                  onTap: () {
+                    displayToastMessage("Humidity", context);
+                  },
+                  child: Container(
+                    constraints: BoxConstraints.expand(
+                        height: constrains.maxWidth * 0.3, width: constrains.maxWidth * 0.3),
+                    child: card(context, "Humidity", Icons.cloud, "Love"),
+                  ),
                 ),
-                Container(
-                  constraints: BoxConstraints.expand(
-                      height: constrains.maxWidth * 0.3, width: constrains.maxWidth * 0.3),
-                  child: card(context, "Temperature", Icons.thermostat_sharp, "Love"),
+                GestureDetector(
+                  onTap: () {
+                    displayToastMessage("Temperature", context);
+                  },
+                  child: Container(
+                    constraints: BoxConstraints.expand(
+                        height: constrains.maxWidth * 0.3, width: constrains.maxWidth * 0.3),
+                    child: card(context, "Temperature", Icons.thermostat_sharp, "Love"),
+                  ),
                 ),
-                Container(
-                  constraints: BoxConstraints.expand(
-                      height: constrains.maxWidth * 0.3, width: constrains.maxWidth * 0.3),
-                  child: card(context, "Water Level", Icons.eco, "Love"),
-                )
-              ],
-            ),
-            SizedBox(
-              height: constrains.maxHeight * 0.01,
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center, //Center Row contents horizontally,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Container(
-                  constraints: BoxConstraints.expand(
-                      height: constrains.maxWidth * 0.3, width: constrains.maxWidth * 0.3),
-                  child: card(context, "Connectivity", Icons.network_wifi, "Love"),
-                ),
-                Container(
-                  constraints: BoxConstraints.expand(
-                      height: constrains.maxWidth * 0.3, width: constrains.maxWidth * 0.6),
-                  child: card(context, "Light Status", Icons.lightbulb, "Love"),
+                GestureDetector(
+                  onTap: () {
+                    displayToastMessage("Water Level", context);
+                  },
+                  child: Container(
+                    constraints: BoxConstraints.expand(
+                        height: constrains.maxWidth * 0.3, width: constrains.maxWidth * 0.3),
+                    child: card(context, "Water Level", Icons.eco, "Love"),
+                  ),
                 ),
               ],
             ),
@@ -90,15 +87,54 @@ class _HomeScreenState extends State<HomeScreen> {
               mainAxisAlignment: MainAxisAlignment.center, //Center Row contents horizontally,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Container(
-                  constraints: BoxConstraints.expand(
-                      height: constrains.maxWidth * 0.3, width: constrains.maxWidth * 0.6),
-                  child: cardStat(context, "Light Status", Icons.lightbulb, "Love"),
+                GestureDetector(
+                  onTap: () {
+                    displayToastMessage("Connectivity", context);
+                  },
+                  child: Container(
+                    constraints: BoxConstraints.expand(
+                        height: constrains.maxWidth * 0.3, width: constrains.maxWidth * 0.3),
+                    child: card(context, "Connectivity", Icons.network_wifi, "Love"),
+                  ),
                 ),
-                Container(
-                  constraints: BoxConstraints.expand(
-                      height: constrains.maxWidth * 0.3, width: constrains.maxWidth * 0.3),
-                  child: card(context, "Alarm", Icons.alarm, "Love"),
+                GestureDetector(
+                  onTap: () {
+                    displayToastMessage("Light Status", context);
+                  },
+                  child: Container(
+                    constraints: BoxConstraints.expand(
+                        height: constrains.maxWidth * 0.3, width: constrains.maxWidth * 0.6),
+                    child: card(context, "Light Status", Icons.lightbulb, "Love"),
+                  ),
+                ),
+              ],
+            ),
+            SizedBox(
+              height: constrains.maxHeight * 0.01,
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center, //Center Row contents horizontally,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                GestureDetector(
+                  onTap: () {
+                    displayToastMessage("Status", context);
+                  },
+                  child: Container(
+                    constraints: BoxConstraints.expand(
+                        height: constrains.maxWidth * 0.3, width: constrains.maxWidth * 0.6),
+                    child: cardStat(context, "Light Status", Icons.lightbulb, "Love"),
+                  ),
+                ),
+                GestureDetector(
+                  onTap: () {
+                    displayToastMessage("Alarm", context);
+                  },
+                  child: Container(
+                    constraints: BoxConstraints.expand(
+                        height: constrains.maxWidth * 0.3, width: constrains.maxWidth * 0.3),
+                    child: card(context, "Alarm", Icons.alarm, "Love"),
+                  ),
                 ),
               ],
             ),
@@ -107,4 +143,8 @@ class _HomeScreenState extends State<HomeScreen> {
       );
     });
   }
+}
+
+displayToastMessage(String message, BuildContext context) {
+  Fluttertoast.showToast(msg: message);
 }
