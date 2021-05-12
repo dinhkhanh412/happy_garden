@@ -8,7 +8,7 @@ var images = [
   'assets/images/plant_3.jpg'
 ];
 
-Swiper imageSwiper(context, constraints) {
+Swiper imageSwiper(context, constrains) {
   return new Swiper(
     autoplay: true,
     autoplayDelay: 5000,
@@ -24,7 +24,7 @@ Swiper imageSwiper(context, constraints) {
         builder:
             DotSwiperPaginationBuilder(color: Color(0xffD2EDE3), activeColor: Color(0xff0C9359))),
     itemCount: images.length,
-    viewportFraction: 0.75,
+    viewportFraction: 0.85,
     scale: 0.9,
   );
 }

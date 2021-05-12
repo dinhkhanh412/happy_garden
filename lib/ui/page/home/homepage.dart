@@ -22,17 +22,20 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
             Row(
               children: [
+                SizedBox(
+                  width: constrains.maxWidth * 0.075,
+                ),
                 Text(
                   "Hello user",
-                  style: TextStyle(fontSize: 16),
+                  style: TextStyle(fontSize: 24, fontFamily: "Mulish"),
                 ),
               ],
             ),
             SizedBox(
-              height: constrains.maxHeight * 0.05,
+              height: constrains.maxHeight * 0.025,
             ),
             Container(
-              constraints: BoxConstraints.expand(height: constrains.maxHeight * 0.25),
+              constraints: BoxConstraints.expand(height: constrains.maxHeight * 0.225),
               child: imageSwiper(context, constrains),
             ),
           ],
