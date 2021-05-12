@@ -1,9 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
 
-var images = ['images/plant_1.jpg', 'images/plant_2.jpg', 'images/plant_3.jpg'];
+var images = [
+  'assets/images/plant_1.jpg',
+  'assets/images/plant_2.jpg',
+  'assets/images/plant_3.jpg'
+];
 
-Swiper imageSwiper(context) {
+Swiper imageSwiper(context, constraints) {
   return new Swiper(
     autoplay: true,
     autoplayDelay: 5000,
