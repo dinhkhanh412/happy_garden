@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:custom_switch/custom_switch.dart';
+
 import 'package:happy_garden/ui/page/home/widget/ImageSwiper.dart';
 import 'package:happy_garden/ui/page/home/widget/ElementCard.dart';
-import 'package:fluttertoast/fluttertoast.dart';
+
+import 'package:happy_garden/manage/mqtt/MQTTManager.dart';
+import 'package:provider/provider.dart';
 
 class HomeScreen extends StatefulWidget {
   final String UID;
@@ -13,141 +18,21 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  int _selectedIndex = 0;
+  MQTTManager _manager = new MQTTManager();
 
-  void _onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
-  }
+  int _selectedIndex = 0;
+  bool status = false;
 
   @override
   Widget build(BuildContext context) {
-    return LayoutBuilder(builder: (context, constrains) {
+    //_manager = Provider.of<MQTTManager>(context);
+    _configureAndConnect();
+
+    //_manager.subScribeTo(_topicTextController.text);
+    return LayoutBuilder(builder: (context, constraints) {
       return Scaffold(
         backgroundColor: Color(0xffF5FDFB),
-        body: Column(
-          children: <Widget>[
-            SizedBox(
-              height: constrains.maxHeight * 0.085,
-            ),
-            Row(
-              children: [
-                SizedBox(
-                  width: constrains.maxWidth * 0.075,
-                ),
-                Text(
-                  "Hello user",
-                  style: TextStyle(fontSize: 24, fontFamily: "Mulish"),
-                ),
-              ],
-            ),
-            SizedBox(
-              height: constrains.maxHeight * 0.025,
-            ),
-            Container(
-              constraints: BoxConstraints.expand(height: constrains.maxHeight * 0.25),
-              child: imageSwiper(context, constrains),
-            ),
-            SizedBox(
-              height: constrains.maxHeight * 0.05,
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                GestureDetector(
-                  onTap: () {
-                    displayToastMessage("Humidity", context);
-                  },
-                  child: Container(
-                    constraints: BoxConstraints.expand(
-                        height: constrains.maxWidth * 0.3, width: constrains.maxWidth * 0.3),
-                    child: card(context, "Humidity", Icons.cloud, "Love"),
-                  ),
-                ),
-                GestureDetector(
-                  onTap: () {
-                    displayToastMessage("Temperature", context);
-                  },
-                  child: Container(
-                    constraints: BoxConstraints.expand(
-                        height: constrains.maxWidth * 0.3, width: constrains.maxWidth * 0.3),
-                    child: card(context, "Temperature", Icons.thermostat_sharp, "Love"),
-                  ),
-                ),
-                GestureDetector(
-                  onTap: () {
-                    displayToastMessage("Water Level", context);
-                  },
-                  child: Container(
-                    constraints: BoxConstraints.expand(
-                        height: constrains.maxWidth * 0.3, width: constrains.maxWidth * 0.3),
-                    child: card(context, "Water Level", Icons.eco, "Love"),
-                  ),
-                ),
-              ],
-            ),
-            SizedBox(
-              height: constrains.maxHeight * 0.01,
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center, //Center Row contents horizontally,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                GestureDetector(
-                  onTap: () {
-                    displayToastMessage("Connectivity", context);
-                  },
-                  child: Container(
-                    constraints: BoxConstraints.expand(
-                        height: constrains.maxWidth * 0.3, width: constrains.maxWidth * 0.3),
-                    child: card(context, "Connectivity", Icons.network_wifi, "Love"),
-                  ),
-                ),
-                GestureDetector(
-                  onTap: () {
-                    displayToastMessage("Light Status", context);
-                  },
-                  child: Container(
-                    constraints: BoxConstraints.expand(
-                        height: constrains.maxWidth * 0.3, width: constrains.maxWidth * 0.6),
-                    child: card(context, "Light Status", Icons.lightbulb, "Love"),
-                  ),
-                ),
-              ],
-            ),
-            SizedBox(
-              height: constrains.maxHeight * 0.01,
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center, //Center Row contents horizontally,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                GestureDetector(
-                  onTap: () {
-                    displayToastMessage("Status", context);
-                  },
-                  child: Container(
-                    constraints: BoxConstraints.expand(
-                        height: constrains.maxWidth * 0.3, width: constrains.maxWidth * 0.6),
-                    child: cardStat(context, "Light Status", Icons.lightbulb, "Love"),
-                  ),
-                ),
-                GestureDetector(
-                  onTap: () {
-                    displayToastMessage("Alarm", context);
-                  },
-                  child: Container(
-                    constraints: BoxConstraints.expand(
-                        height: constrains.maxWidth * 0.3, width: constrains.maxWidth * 0.3),
-                    child: card(context, "Alarm", Icons.alarm, "Love"),
-                  ),
-                ),
-              ],
-            ),
-          ],
-        ),
+        body: _buildScroll(_manager, constraints),
         bottomNavigationBar: BottomNavigationBar(
           items: const <BottomNavigationBarItem>[
             BottomNavigationBarItem(
@@ -169,6 +54,172 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
       );
     });
+  }
+
+  Widget _buildScroll(MQTTManager manager, BoxConstraints constraints) {
+    return SingleChildScrollView(
+      child: ConstrainedBox(
+        constraints: BoxConstraints(
+          minHeight: constraints.maxHeight,
+        ),
+        child: _buildColumn(manager, constraints),
+      ),
+    );
+  }
+
+  Widget _buildColumn(MQTTManager manager, BoxConstraints constraints) {
+    return Column(
+      children: <Widget>[
+        SizedBox(
+          height: constraints.maxHeight * 0.085,
+        ),
+        Row(
+          children: [
+            SizedBox(
+              width: constraints.maxWidth * 0.075,
+            ),
+            Text(
+              "Hello user",
+              style: TextStyle(fontSize: 24, fontFamily: "Mulish"),
+            ),
+            SizedBox(
+              width: constraints.maxWidth * 0.25,
+            ),
+            CustomSwitch(
+              activeColor: Color(0xff0C9359),
+              value: status,
+              onChanged: (value) {
+                _manager.publish(status ? '1' : '0');
+                print("VALUE : $value");
+                setState(() {
+                  status = value;
+                });
+              },
+            ),
+          ],
+        ),
+        SizedBox(
+          height: constraints.maxHeight * 0.025,
+        ),
+        Container(
+          constraints: BoxConstraints.expand(height: constraints.maxHeight * 0.25),
+          child: imageSwiper(context, constraints),
+        ),
+        SizedBox(
+          height: constraints.maxHeight * 0.05,
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            GestureDetector(
+              onTap: () {
+                displayToastMessage("Humidity", context);
+              },
+              child: Container(
+                constraints: BoxConstraints.expand(
+                    height: constraints.maxWidth * 0.3, width: constraints.maxWidth * 0.3),
+                child: card(context, "Humidity", Icons.cloud, "Love"),
+              ),
+            ),
+            GestureDetector(
+              onTap: () {
+                displayToastMessage("Temperature", context);
+              },
+              child: Container(
+                constraints: BoxConstraints.expand(
+                    height: constraints.maxWidth * 0.3, width: constraints.maxWidth * 0.3),
+                child: card(context, "Temperature", Icons.thermostat_sharp, "Love"),
+              ),
+            ),
+            GestureDetector(
+              onTap: () {
+                displayToastMessage("Water Level", context);
+              },
+              child: Container(
+                constraints: BoxConstraints.expand(
+                    height: constraints.maxWidth * 0.3, width: constraints.maxWidth * 0.3),
+                child: card(context, "Water Level", Icons.eco, "Love"),
+              ),
+            ),
+          ],
+        ),
+        SizedBox(
+          height: constraints.maxHeight * 0.01,
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center, //Center Row contents horizontally,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            GestureDetector(
+              onTap: () {
+                displayToastMessage("Connectivity", context);
+              },
+              child: Container(
+                constraints: BoxConstraints.expand(
+                    height: constraints.maxWidth * 0.3, width: constraints.maxWidth * 0.3),
+                child: card(context, "Connectivity", Icons.network_wifi, "Love"),
+              ),
+            ),
+            GestureDetector(
+              onTap: () {
+                displayToastMessage("Light Status", context);
+              },
+              child: Container(
+                constraints: BoxConstraints.expand(
+                    height: constraints.maxWidth * 0.3, width: constraints.maxWidth * 0.6),
+                child: card(context, "Light Status", Icons.lightbulb, "Love"),
+              ),
+            ),
+          ],
+        ),
+        SizedBox(
+          height: constraints.maxHeight * 0.01,
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center, //Center Row contents horizontally,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            GestureDetector(
+              onTap: () {
+                displayToastMessage("Status", context);
+              },
+              child: Container(
+                constraints: BoxConstraints.expand(
+                    height: constraints.maxWidth * 0.3, width: constraints.maxWidth * 0.6),
+                child: cardStat(context, "Light Status", Icons.lightbulb, "Love"),
+              ),
+            ),
+            GestureDetector(
+              onTap: () {
+                displayToastMessage("Alarm", context);
+              },
+              child: Container(
+                constraints: BoxConstraints.expand(
+                    height: constraints.maxWidth * 0.3, width: constraints.maxWidth * 0.3),
+                child: card(context, "Alarm", Icons.alarm, "Love"),
+              ),
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+
+  //function
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+  }
+
+  void _configureAndConnect() async {
+    // TODO: Use UUID
+    String osPrefix = 'Flutter_Android';
+    _manager.initializeMQTTClient(identifier: osPrefix);
+    await _manager.connect();
+    _manager.subScribeTo('dinhkhanh412/feeds/light');
+    _manager.subScribeTo('dinhkhanh412/feeds/light2');
   }
 }
 
