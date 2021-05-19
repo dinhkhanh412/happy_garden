@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
 
+
 var images = [
   'assets/images/plant_1.jpg',
   'assets/images/plant_2.jpg',
