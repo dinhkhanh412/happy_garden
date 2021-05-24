@@ -19,7 +19,7 @@ Padding card(context, String name, IconData icon, String status) {
           ),
           SizedBox(height: 10),
           Text(
-            name,
+            status,
             style: TextStyle(
                 fontSize: 16,
                 fontFamily: "Mulish",
@@ -37,7 +37,6 @@ Padding cardStat(context, String name, IconData icon, String status) {
     padding: EdgeInsets.all(0.0),
     child: Card(
       child: Column(
-        
         children: [
           SizedBox(height: 5),
           Text(

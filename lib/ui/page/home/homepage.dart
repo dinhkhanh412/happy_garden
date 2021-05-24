@@ -24,10 +24,13 @@ class _HomeScreenState extends State<HomeScreen> {
   bool status = false;
 
   @override
-  Widget build(BuildContext context) {
-    //_manager = Provider.of<MQTTManager>(context);
+  void initState() {
+    super.initState();
     _configureAndConnect();
+  }
 
+  @override
+  Widget build(BuildContext context) {
     //_manager.subScribeTo(_topicTextController.text);
     return LayoutBuilder(builder: (context, constraints) {
       return Scaffold(
@@ -168,7 +171,7 @@ class _HomeScreenState extends State<HomeScreen> {
               child: Container(
                 constraints: BoxConstraints.expand(
                     height: constraints.maxWidth * 0.3, width: constraints.maxWidth * 0.6),
-                child: card(context, "Light Status", Icons.lightbulb, "Love"),
+                child: light(_manager.currentState.getReceivedText),
               ),
             ),
           ],
@@ -206,6 +209,10 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
+  Widget light(String text) {
+    return card(context, "Light Status", Icons.lightbulb, text);
+  }
+
   //function
   void _onItemTapped(int index) {
     setState(() {
@@ -214,12 +221,9 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   void _configureAndConnect() async {
-    // TODO: Use UUID
     String osPrefix = 'Flutter_Android';
     _manager.initializeMQTTClient(identifier: osPrefix);
-    await _manager.connect();
-    _manager.subScribeTo('dinhkhanh412/feeds/light');
-    _manager.subScribeTo('dinhkhanh412/feeds/light2');
+    _manager.connect();
   }
 }
 
