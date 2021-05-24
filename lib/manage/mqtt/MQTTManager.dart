@@ -14,7 +14,7 @@ class MQTTManager extends ChangeNotifier {
   String _key = 'aio_PrHt51fI5dDoYgZg87UqzAzFltXY';
   String _identifier;
 
-  String _topic = "";
+  String _topic = "dinhkhanh412/feeds/light";
 
   void initializeMQTTClient({
     @required String identifier,
@@ -56,7 +56,7 @@ class MQTTManager extends ChangeNotifier {
       _currentState.setAppConnectionState(MQTTAppConnectionState.connecting);
       updateState();
       await _client.connect();
-      // _client.subscribe('dinhkhanh412/feeds/light', MqttQos.atLeastOnce);
+      _client.subscribe('dinhkhanh412/feeds/light', MqttQos.atLeastOnce);
       // _client.subscribe('dinhkhanh412/feeds/light2', MqttQos.atLeastOnce);
     } on Exception catch (e) {
       print('EXAMPLE::client exception - $e');
@@ -104,7 +104,6 @@ class MQTTManager extends ChangeNotifier {
   void onConnected() {
     _currentState.setAppConnectionState(MQTTAppConnectionState.connected);
     updateState();
-    print('EXAMPLE::Mosquitto client connected....');
     _client.updates.listen((List<MqttReceivedMessage<MqttMessage>> c) {
       final MqttPublishMessage recMess = c[0].payload;
       final String pt = MqttPublishPayload.bytesToStringAsString(recMess.payload.message);
@@ -119,8 +118,8 @@ class MQTTManager extends ChangeNotifier {
 
   void subScribeTo(String topic) {
     // Save topic for future use
-    _topic = topic;
-    _client.subscribe(_topic, MqttQos.atLeastOnce);
+    //_topic = topic;
+    _client.subscribe(topic, MqttQos.atLeastOnce);
   }
 
   /// Unsubscribe from a topic
