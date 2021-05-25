@@ -122,7 +122,7 @@ class _HomeScreenState extends State<HomeScreen> {
               child: Container(
                 constraints: BoxConstraints.expand(
                     height: constraints.maxWidth * 0.3, width: constraints.maxWidth * 0.3),
-                child: card(context, "Humidity", Icons.cloud, "Love"),
+                child: card(context, "Humidity", Icons.cloud, "OFF"),
               ),
             ),
             GestureDetector(
@@ -132,7 +132,7 @@ class _HomeScreenState extends State<HomeScreen> {
               child: Container(
                 constraints: BoxConstraints.expand(
                     height: constraints.maxWidth * 0.3, width: constraints.maxWidth * 0.3),
-                child: card(context, "Temperature", Icons.thermostat_sharp, "Love"),
+                child: card(context, "Temperature", Icons.thermostat_sharp, "OFF"),
               ),
             ),
             GestureDetector(
@@ -142,7 +142,7 @@ class _HomeScreenState extends State<HomeScreen> {
               child: Container(
                 constraints: BoxConstraints.expand(
                     height: constraints.maxWidth * 0.3, width: constraints.maxWidth * 0.3),
-                child: card(context, "Water Level", Icons.eco, "Love"),
+                child: card(context, "Water Level", Icons.eco, "OFF"),
               ),
             ),
           ],
@@ -161,7 +161,7 @@ class _HomeScreenState extends State<HomeScreen> {
               child: Container(
                 constraints: BoxConstraints.expand(
                     height: constraints.maxWidth * 0.3, width: constraints.maxWidth * 0.3),
-                child: card(context, "Connectivity", Icons.network_wifi, "Love"),
+                child: card(context, "Connectivity", Icons.network_wifi, "OFF"),
               ),
             ),
             GestureDetector(
@@ -190,7 +190,7 @@ class _HomeScreenState extends State<HomeScreen> {
               child: Container(
                 constraints: BoxConstraints.expand(
                     height: constraints.maxWidth * 0.3, width: constraints.maxWidth * 0.6),
-                child: cardStat(context, "Light Status", Icons.lightbulb, "Love"),
+                child: cardStat(context, "Light Status", Icons.lightbulb, "OFF"),
               ),
             ),
             GestureDetector(
@@ -200,7 +200,7 @@ class _HomeScreenState extends State<HomeScreen> {
               child: Container(
                 constraints: BoxConstraints.expand(
                     height: constraints.maxWidth * 0.3, width: constraints.maxWidth * 0.3),
-                child: card(context, "Alarm", Icons.alarm, "Love"),
+                child: card(context, "Alarm", Icons.alarm, "OFF"),
               ),
             ),
           ],
