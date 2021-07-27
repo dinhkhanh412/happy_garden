@@ -1,32 +1,110 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:custom_switch/custom_switch.dart';
+import 'package:happy_garden/manage/mqtt/MQTTAppState.dart';
 
 import 'package:happy_garden/ui/page/home/widget/ImageSwiper.dart';
 import 'package:happy_garden/ui/page/home/widget/ElementCard.dart';
 
 import 'package:happy_garden/manage/mqtt/MQTTManager.dart';
+import 'package:happy_garden/api/device_api.dart';
+import 'package:happy_garden/models/Feed.dart';
 import 'package:provider/provider.dart';
 
 class HomeScreen extends StatefulWidget {
   final String UID;
-
-  HomeScreen({Key key, this.UID}) : super(key: key);
+  final String gardenName;
+  HomeScreen({Key key, this.UID, this.gardenName}) : super(key: key);
 
   @override
   _HomeScreenState createState() => _HomeScreenState();
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  MQTTManager _manager = new MQTTManager();
-
+  MQTTManager _manager_1 = new MQTTManager();
+  MQTTManager _manager_2 = new MQTTManager();
   int _selectedIndex = 0;
+  bool online = false;
   bool status = false;
+
+  bool connectivity = false;
+  num temperature = 0;
+  num humidity = 0;
+  num waterLv = 0;
+  num lightLv = 0;
+  bool pumpStart = false;
 
   @override
   void initState() {
-    super.initState();
-    _configureAndConnect();
+    _initValue();
+    _manager_1.addListener(() {
+      MQTTAppState map1 = _manager_1.currentState;
+      Map<String, dynamic> adaResponse = jsonDecode(map1.getReceivedText);
+      Feed feed = Feed.fromJson(adaResponse);
+      setState(() {
+        online = true;
+      });
+      String data = feed.data;
+      switch (int.parse(feed.id)) {
+        case 7:
+          {
+            setState(() {
+              final sub = data.indexOf("-");
+              temperature = int.parse(data.substring(0, sub));
+              humidity = int.parse(data.substring(sub + 1, data.length));
+            });
+          }
+          break;
+
+        case 9:
+          {
+            setState(() {
+              waterLv = int.parse(data);
+            });
+          }
+          break;
+
+        default:
+          {
+            //statements;
+          }
+          break;
+      }
+    });
+    _manager_2.addListener(() {
+      MQTTAppState map2 = _manager_2.currentState;
+      Map<String, dynamic> adaResponse = jsonDecode(map2.getReceivedText);
+      Feed feed = Feed.fromJson(adaResponse);
+      setState(() {
+        online = true;
+      });
+      String data = feed.data;
+      switch (int.parse(feed.id)) {
+        case 11:
+          {
+            setState(() {
+              pumpStart = (data == "1") ? true : false;
+            });
+          }
+          break;
+
+        case 13:
+          {
+            setState(() {
+              lightLv = int.parse(data);
+            });
+          }
+          break;
+
+        default:
+          {
+            //statements;
+          }
+          break;
+      }
+    });
   }
 
   @override
@@ -35,7 +113,7 @@ class _HomeScreenState extends State<HomeScreen> {
     return LayoutBuilder(builder: (context, constraints) {
       return Scaffold(
         backgroundColor: Color(0xffF5FDFB),
-        body: _buildScroll(_manager, constraints),
+        body: _buildScroll(_manager_1, constraints),
         bottomNavigationBar: BottomNavigationBar(
           items: const <BottomNavigationBarItem>[
             BottomNavigationBarItem(
@@ -86,18 +164,7 @@ class _HomeScreenState extends State<HomeScreen> {
               style: TextStyle(fontSize: 24, fontFamily: "Mulish"),
             ),
             SizedBox(
-              width: constraints.maxWidth * 0.25,
-            ),
-            CustomSwitch(
-              activeColor: Color(0xff0C9359),
-              value: status,
-              onChanged: (value) {
-                _manager.publish(status ? '1' : '0');
-                print("VALUE : $value");
-                setState(() {
-                  status = value;
-                });
-              },
+              width: constraints.maxWidth * 0.1,
             ),
           ],
         ),
@@ -169,10 +236,9 @@ class _HomeScreenState extends State<HomeScreen> {
                 displayToastMessage("Light Status", context);
               },
               child: Container(
-                constraints: BoxConstraints.expand(
-                    height: constraints.maxWidth * 0.3, width: constraints.maxWidth * 0.6),
-                child: light(_manager.currentState.getReceivedText),
-              ),
+                  constraints: BoxConstraints.expand(
+                      height: constraints.maxWidth * 0.3, width: constraints.maxWidth * 0.6),
+                  child: light(lightLv)),
             ),
           ],
         ),
@@ -209,8 +275,8 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Widget light(String text) {
-    return card(context, "Light Status", Icons.lightbulb, text);
+  Widget light(num text) {
+    return card(context, "Light Status", Icons.lightbulb, text.toString());
   }
 
   //function
@@ -221,9 +287,41 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   void _configureAndConnect() async {
-    String osPrefix = 'Flutter_Android';
-    _manager.initializeMQTTClient(identifier: osPrefix);
-    _manager.connect();
+    String server1 = 'server_1';
+    String server2 = 'server_2';
+    await _manager_1.initializeMQTTClient(identifier: server1, server: "BBC");
+    await _manager_2.initializeMQTTClient(identifier: server2, server: "BBC1");
+    _manager_1.connect();
+    _manager_2.connect();
+  }
+
+  void _initValue() async {
+    DeviceAPI deviceAPI = new DeviceAPI(widget.UID);
+    // temp + humi
+    Feed temp = await deviceAPI.getDevice("7");
+    String data = temp.data;
+    final sub = data.indexOf("-");
+    setState(() {
+      temperature = int.parse(data.substring(0, sub));
+      humidity = int.parse(data.substring(sub + 1, data.length));
+    });
+    // soil
+    temp = await deviceAPI.getDevice("9");
+    setState(() {
+      waterLv = int.parse(temp.data);
+    });
+
+    // light
+    temp = await deviceAPI.getDevice("13");
+    setState(() {
+      lightLv = int.parse(temp.data);
+    });
+
+    // pump
+    temp = await deviceAPI.getDevice("11");
+    setState(() {
+      pumpStart = (temp.data == "1") ? true : false;
+    });
   }
 }
 
