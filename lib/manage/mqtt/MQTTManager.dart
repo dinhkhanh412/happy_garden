@@ -10,10 +10,10 @@ import 'package:happy_garden/api/device_api.dart';
 import 'package:http/http.dart' as http;
 
 Future<String> fetchKey(String server) async {
-  if (server == 'BBC') {
-    return "keyBBC";
+  if (server == 'dinhkhanh412') {
+    return "aio_PrHt51fI5dDoYgZg87UqzAzFltXY";
   } else {
-    return "keyBBC1";
+    return "aio_PrHt51fI5dDoYgZg87UqzAzFltXY";
   }
   // final response = await http.get(Uri.parse('http://dadn.esp32thanhdanh.link'));
 
@@ -53,8 +53,10 @@ class MQTTManager extends ChangeNotifier {
     // _key = splitKey(response)[0];
     final Future<String> keyBBC = fetchKey(server);
     _key = await keyBBC;
-    _user = "CSE_" + server;
-    _topic = "CSE_" + server + "/feeds/#";
+    // _user = "CSE_" + server;
+    // _topic = "CSE_" + server + "/feeds/#";
+    _user = server;
+    _topic = server + "/feeds/#";
     _identifier = identifier;
     _host = host;
     _client = MqttServerClient(_host, _key);
