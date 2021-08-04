@@ -6,6 +6,8 @@ import 'helpers/service_locator.dart';
 import 'manage/mqtt/MQTTManager.dart';
 import 'package:happy_garden/ui/page/welcome_page.dart';
 
+import 'package:happy_garden/ui/page/detail/detailpage.dart';
+
 void main() {
   setupLocator();
   runApp(MyApp());
@@ -24,8 +26,9 @@ class MyApp extends StatelessWidget {
           ),
           initialRoute: '/',
           routes: {
-            '/': (BuildContext context) =>
-                HomeScreen(UID: "61063c60d95daa29e8639f65", gardenName: "Home")
+            // '/': (BuildContext context) =>
+            //     HomeScreen(UID: "61063c60d95daa29e8639f65", gardenName: "Home")
+            '/': (BuildContext context) => DetailScreen()
           }),
     );
   }

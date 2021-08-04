@@ -14,86 +14,71 @@ class DetailScreen extends StatefulWidget {
 }
 
 class _DetailScreenState extends State<DetailScreen> {
-  int cupertinoTabBarVValue = 0;
-  int cupertinoTabBarVValueGetter() => cupertinoTabBarVValue;
+  int cupertinoTabBarValue = 0;
+  int cupertinoTabBarValueGetter() => cupertinoTabBarValue;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFF2B292B),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
+            Text(
+              "Your Garden",
+              style: const TextStyle(
+                color: Colors.white,
+                fontSize: 15,
+                fontWeight: FontWeight.w400,
+                fontFamily: "SFProRounded",
+              ),
+              textAlign: TextAlign.center,
+            ),
             Container(
               constraints: const BoxConstraints.expand(height: 10.0),
             ),
-            Padding(
-              padding: const EdgeInsets.only(
-                left: 10,
-                right: 10,
-              ),
-              child: CupertinoTabBar.CupertinoTabBar(
-                cupertinoTabBarVValue == 0
-                    ? const Color(0xFF943855)
-                    : cupertinoTabBarVValue == 1
-                        ? const Color(0xFF207561)
-                        : cupertinoTabBarVValue == 2
-                            ? const Color(0xFFf0dd92)
-                            : const Color(0xFF4f81c7),
-                cupertinoTabBarVValue == 0
-                    ? const Color(0xFFeb7070)
-                    : cupertinoTabBarVValue == 1
-                        ? const Color(0xFF589167)
-                        : cupertinoTabBarVValue == 2
-                            ? const Color(0xFFffffc5)
-                            : const Color(0xFF64c4ed),
-                [
-                  Text(
-                    "PLANTS",
-                    style: TextStyle(
-                      color: cupertinoTabBarVValue == 2
-                          ? Colors.black
-                          : Colors.white,
-                      fontSize: 18.75,
-                      fontWeight: FontWeight.w400,
-                      fontFamily: "SFProRounded",
-                    ),
-                    textAlign: TextAlign.center,
+            CupertinoTabBar.CupertinoTabBar(
+              const Color(0xFF207561),
+              const Color(0xFF719192),
+              [
+                const Text(
+                  "Plants",
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 18.75,
+                    fontWeight: FontWeight.w400,
+                    fontFamily: "SFProRounded",
                   ),
-                  Text(
-                    "LOG",
-                    style: TextStyle(
-                      color: cupertinoTabBarVValue == 2
-                          ? Colors.black
-                          : Colors.white,
-                      fontSize: 18.75,
-                      fontWeight: FontWeight.w400,
-                      fontFamily: "SFProRounded",
-                    ),
-                    textAlign: TextAlign.center,
+                  textAlign: TextAlign.center,
+                ),
+                const Text(
+                  "Log",
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 18.75,
+                    fontWeight: FontWeight.w400,
+                    fontFamily: "SFProRounded",
                   ),
-                  Text(
-                    "SETTINGS",
-                    style: TextStyle(
-                      color: cupertinoTabBarVValue == 2
-                          ? Colors.black
-                          : Colors.white,
-                      fontSize: 18.75,
-                      fontWeight: FontWeight.w400,
-                      fontFamily: "SFProRounded",
-                    ),
-                    textAlign: TextAlign.center,
+                  textAlign: TextAlign.center,
+                ),
+                const Text(
+                  "Settings",
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 18.75,
+                    fontWeight: FontWeight.w400,
+                    fontFamily: "SFProRounded",
                   ),
-                ],
-                cupertinoTabBarVValueGetter,
-                (int index) {
-                  setState(() {
-                    cupertinoTabBarVValue = index;
-                  });
-                },
-                useSeparators: true,
-              ),
+                  textAlign: TextAlign.center,
+                ),
+              ],
+              cupertinoTabBarValueGetter,
+              (int index) {
+                setState(() {
+                  cupertinoTabBarValue = index;
+                });
+              },
+              useSeparators: true,
             ),
           ],
         ),
