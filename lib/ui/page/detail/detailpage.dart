@@ -14,7 +14,7 @@ class DetailScreen extends StatefulWidget {
 }
 
 class _DetailScreenState extends State<DetailScreen> {
-  int cupertinoTabBarValue = 0;
+  int cupertinoTabBarValue = 1;
   int cupertinoTabBarValueGetter() => cupertinoTabBarValue;
 
   @override
@@ -24,25 +24,12 @@ class _DetailScreenState extends State<DetailScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text(
-              "Your Garden",
-              style: const TextStyle(
-                color: Colors.white,
-                fontSize: 15,
-                fontWeight: FontWeight.w400,
-                fontFamily: "SFProRounded",
-              ),
-              textAlign: TextAlign.center,
-            ),
-            Container(
-              constraints: const BoxConstraints.expand(height: 10.0),
-            ),
             CupertinoTabBar.CupertinoTabBar(
               const Color(0xFF207561),
               const Color(0xFF719192),
               [
                 const Text(
-                  "Plants",
+                  "PLANTS",
                   style: const TextStyle(
                     color: Colors.white,
                     fontSize: 18.75,
@@ -52,7 +39,7 @@ class _DetailScreenState extends State<DetailScreen> {
                   textAlign: TextAlign.center,
                 ),
                 const Text(
-                  "Log",
+                  "LOG",
                   style: const TextStyle(
                     color: Colors.white,
                     fontSize: 18.75,
@@ -62,7 +49,7 @@ class _DetailScreenState extends State<DetailScreen> {
                   textAlign: TextAlign.center,
                 ),
                 const Text(
-                  "Settings",
+                  "SETTINGS",
                   style: const TextStyle(
                     color: Colors.white,
                     fontSize: 18.75,
@@ -79,6 +66,9 @@ class _DetailScreenState extends State<DetailScreen> {
                 });
               },
               useSeparators: true,
+            ),
+            Container(
+              constraints: const BoxConstraints.expand(height: 20.0),
             ),
           ],
         ),
