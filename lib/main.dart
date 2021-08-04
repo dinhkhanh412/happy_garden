@@ -14,7 +14,7 @@ void main() {
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider<MQTTManager>( 
+    return ChangeNotifierProvider<MQTTManager>(
       create: (context) => service_locator<MQTTManager>(),
       child: MaterialApp(
           title: 'Flutter Demo',
@@ -24,7 +24,8 @@ class MyApp extends StatelessWidget {
           ),
           initialRoute: '/',
           routes: {
-            '/': (BuildContext context) => HomeScreen(UID: "61063c60d95daa29e8639f65", gardenName: "Home")
+            '/': (BuildContext context) =>
+                HomeScreen(UID: "61063c60d95daa29e8639f65", gardenName: "Home")
           }),
     );
   }
