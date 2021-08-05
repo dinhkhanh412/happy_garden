@@ -28,7 +28,7 @@ class MyApp extends StatelessWidget {
           routes: {
             // '/': (BuildContext context) =>
             //     HomeScreen(UID: "61063c60d95daa29e8639f65", gardenName: "Home")
-            '/': (BuildContext context) => DetailScreen()
+            '/': (BuildContext context) => DesignCourseHomeScreen()
           }),
     );
   }

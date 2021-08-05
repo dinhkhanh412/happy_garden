@@ -1,276 +1,309 @@
-import 'dart:math';
-
-import 'package:flutter/cupertino.dart';
+import 'package:happy_garden/ui/page/detail/widget/category_list_view.dart';
+import 'package:happy_garden/ui/page/detail/widget/course_info_screen.dart';
+import 'package:happy_garden/ui/page/detail/widget/popular_course_list_view.dart';
 import 'package:flutter/material.dart';
+import 'package:happy_garden/ui/page/detail/theme/design_course_app_theme.dart';
 
-import 'package:happy_garden/ui/page/detail/widget/cupertino_tabbar.dart'
-    as CupertinoTabBar;
-
-var COLORS = [
-  Color(0xFFEF7A85),
-  Color(0xFFFF90B3),
-  Color(0xFFFFC2E2),
-  Color(0xFFB892FF),
-  Color(0xFFB892FF)
-];
-
-class DetailScreen extends StatefulWidget {
-  DetailScreen({Key key, this.title}) : super(key: key);
-
-  final String title;
-
+class DesignCourseHomeScreen extends StatefulWidget {
   @override
-  _DetailScreenState createState() => _DetailScreenState();
+  _DesignCourseHomeScreenState createState() => _DesignCourseHomeScreenState();
 }
 
-class _DetailScreenState extends State<DetailScreen> {
-  var data = [
-    {
-      "title": "Hey Flutterers, See what I did with Flutter",
-      "content": "This is just a text description of the item",
-      "color": COLORS[new Random().nextInt(5)],
-      "image": "https://picsum.photos/200?random"
-    },
-    {
-      "title": "Hey Flutterers, See what I did with Flutter",
-      "content": "This is just a text description of the item",
-      "color": COLORS[new Random().nextInt(5)],
-      "image": "https://picsum.photos/100?random"
-    },
-    {
-      "title": "Hey Flutterers, See what I did with Flutter",
-      "content": "This is just a text description of the item",
-      "color": COLORS[new Random().nextInt(5)],
-      "image": "https://picsum.photos/150?random"
-    },
-    {
-      "title": "Hey Flutterers, See what I did with Flutter",
-      "content": "This is just a text description of the item",
-      "color": COLORS[new Random().nextInt(5)],
-      "image": "https://picsum.photos/125?random"
-    },
-    {
-      "title": "Hey Flutterers, See what I did with Flutter",
-      "content": "This is just a text description of the item",
-      "color": COLORS[new Random().nextInt(5)],
-      "image": "https://picsum.photos/175?random"
-    },
-    {
-      "title": "Hey Flutterers, See what I did with Flutter",
-      "content": "This is just a text description of the item",
-      "color": COLORS[new Random().nextInt(5)],
-      "image": "https://picsum.photos/225?random"
-    },
-    {
-      "title": "Hey Flutterers, See what I did with Flutter",
-      "content": "This is just a text description of the item",
-      "color": COLORS[new Random().nextInt(5)],
-      "image": "https://picsum.photos/250?random"
-    },
-    {
-      "title": "Hey Flutterers, See what I did with Flutter",
-      "content": "This is just a text description of the item",
-      "color": COLORS[new Random().nextInt(5)],
-      "image": "https://picsum.photos/350?random"
-    },
-    {
-      "title": "Hey Flutterers, See what I did with Flutter",
-      "content": "This is just a text description of the item",
-      "color": COLORS[new Random().nextInt(5)],
-      "image": "https://picsum.photos/275?random"
-    },
-    {
-      "title": "Hey Flutterers, See what I did with Flutter",
-      "content": "This is just a text description of the item",
-      "color": COLORS[new Random().nextInt(5)],
-      "image": "https://picsum.photos/300?random"
-    },
-    {
-      "title": "Hey Flutterers, See what I did with Flutter",
-      "content": "This is just a text description of the item",
-      "color": COLORS[new Random().nextInt(5)],
-      "image": "https://picsum.photos/325?random"
-    }
-  ];
-
-  int cupertinoTabBarValue = 1;
-  int cupertinoTabBarValueGetter() => cupertinoTabBarValue;
+class _DesignCourseHomeScreenState extends State<DesignCourseHomeScreen> {
+  CategoryType categoryType = CategoryType.ui;
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Stack(
-        children: [
-          CupertinoTabBar.CupertinoTabBar(
-            const Color(0xFF207561),
-            const Color(0xFF719192),
-            [
-              const Text(
-                "PLANTS",
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 18.75,
-                  fontWeight: FontWeight.w400,
-                  fontFamily: "SFProRounded",
+    return Container(
+      color: DesignCourseAppTheme.nearlyWhite,
+      child: Scaffold(
+        backgroundColor: Colors.transparent,
+        body: Column(
+          children: <Widget>[
+            SizedBox(
+              height: MediaQuery.of(context).padding.top,
+            ),
+            getAppBarUI(),
+            Expanded(
+              child: SingleChildScrollView(
+                child: Container(
+                  height: MediaQuery.of(context).size.height,
+                  child: Column(
+                    children: <Widget>[
+                      getSearchBarUI(),
+                      getCategoryUI(),
+                      Flexible(
+                        child: getPopularCourseUI(),
+                      ),
+                    ],
+                  ),
                 ),
-                textAlign: TextAlign.center,
               ),
-              const Text(
-                "LOG",
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 18.75,
-                  fontWeight: FontWeight.w400,
-                  fontFamily: "SFProRounded",
-                ),
-                textAlign: TextAlign.center,
-              ),
-              const Text(
-                "SETTINGS",
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 18.75,
-                  fontWeight: FontWeight.w400,
-                  fontFamily: "SFProRounded",
-                ),
-                textAlign: TextAlign.center,
-              ),
-            ],
-            cupertinoTabBarValueGetter,
-            (int index) {
-              setState(() {
-                cupertinoTabBarValue = index;
-              });
-            },
-            useSeparators: true,
-          ),
-          Container(
-            constraints: const BoxConstraints.expand(height: 20.0),
-          ),
-          new Transform.translate(
-            offset:
-                new Offset(0.0, MediaQuery.of(context).size.height * 0.1050),
-            child: new ListView.builder(
-              shrinkWrap: true,
-              padding: const EdgeInsets.all(0.0),
-              scrollDirection: Axis.vertical,
-              primary: true,
-              itemCount: data.length,
-              itemBuilder: (BuildContext content, int index) {
-                return AwesomeListItem(
-                    title: data[index]["title"],
-                    content: data[index]["content"],
-                    color: data[index]["color"],
-                    image: data[index]["image"]);
-              },
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget getCategoryUI() {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        Padding(
+          padding: const EdgeInsets.only(top: 8.0, left: 18, right: 16),
+          child: Text(
+            'Category',
+            textAlign: TextAlign.left,
+            style: TextStyle(
+              fontWeight: FontWeight.w600,
+              fontSize: 22,
+              letterSpacing: 0.27,
+              color: DesignCourseAppTheme.darkerText,
             ),
           ),
+        ),
+        const SizedBox(
+          height: 16,
+        ),
+        Padding(
+          padding: const EdgeInsets.only(left: 16, right: 16),
+          child: Row(
+            children: <Widget>[
+              getButtonUI(CategoryType.ui, categoryType == CategoryType.ui),
+              const SizedBox(
+                width: 16,
+              ),
+              getButtonUI(
+                  CategoryType.coding, categoryType == CategoryType.coding),
+              const SizedBox(
+                width: 16,
+              ),
+              getButtonUI(
+                  CategoryType.basic, categoryType == CategoryType.basic),
+            ],
+          ),
+        ),
+        const SizedBox(
+          height: 16,
+        ),
+        CategoryListView(
+          callBack: () {
+            moveTo();
+          },
+        ),
+      ],
+    );
+  }
+
+  Widget getPopularCourseUI() {
+    return Padding(
+      padding: const EdgeInsets.only(top: 8.0, left: 18, right: 16),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Text(
+            'Popular Course',
+            textAlign: TextAlign.left,
+            style: TextStyle(
+              fontWeight: FontWeight.w600,
+              fontSize: 22,
+              letterSpacing: 0.27,
+              color: DesignCourseAppTheme.darkerText,
+            ),
+          ),
+          Flexible(
+            child: PopularCourseListView(
+              callBack: () {
+                moveTo();
+              },
+            ),
+          )
+        ],
+      ),
+    );
+  }
+
+  void moveTo() {
+    Navigator.push<dynamic>(
+      context,
+      MaterialPageRoute<dynamic>(
+        builder: (BuildContext context) => CourseInfoScreen(),
+      ),
+    );
+  }
+
+  Widget getButtonUI(CategoryType categoryTypeData, bool isSelected) {
+    String txt = '';
+    if (CategoryType.ui == categoryTypeData) {
+      txt = 'Ui/Ux';
+    } else if (CategoryType.coding == categoryTypeData) {
+      txt = 'Coding';
+    } else if (CategoryType.basic == categoryTypeData) {
+      txt = 'Basic UI';
+    }
+    return Expanded(
+      child: Container(
+        decoration: BoxDecoration(
+            color: isSelected
+                ? DesignCourseAppTheme.nearlyBlue
+                : DesignCourseAppTheme.nearlyWhite,
+            borderRadius: const BorderRadius.all(Radius.circular(24.0)),
+            border: Border.all(color: DesignCourseAppTheme.nearlyBlue)),
+        child: Material(
+          color: Colors.transparent,
+          child: InkWell(
+            splashColor: Colors.white24,
+            borderRadius: const BorderRadius.all(Radius.circular(24.0)),
+            onTap: () {
+              setState(() {
+                categoryType = categoryTypeData;
+              });
+            },
+            child: Padding(
+              padding: const EdgeInsets.only(
+                  top: 12, bottom: 12, left: 18, right: 18),
+              child: Center(
+                child: Text(
+                  txt,
+                  textAlign: TextAlign.left,
+                  style: TextStyle(
+                    fontWeight: FontWeight.w600,
+                    fontSize: 12,
+                    letterSpacing: 0.27,
+                    color: isSelected
+                        ? DesignCourseAppTheme.nearlyWhite
+                        : DesignCourseAppTheme.nearlyBlue,
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget getSearchBarUI() {
+    return Padding(
+      padding: const EdgeInsets.only(top: 8.0, left: 18),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Container(
+            width: MediaQuery.of(context).size.width * 0.75,
+            height: 64,
+            child: Padding(
+              padding: const EdgeInsets.only(top: 8, bottom: 8),
+              child: Container(
+                decoration: BoxDecoration(
+                  color: Color(0xFF207561),
+                  borderRadius: const BorderRadius.only(
+                    bottomRight: Radius.circular(13.0),
+                    bottomLeft: Radius.circular(13.0),
+                    topLeft: Radius.circular(13.0),
+                    topRight: Radius.circular(13.0),
+                  ),
+                ),
+                child: Row(
+                  children: <Widget>[
+                    Expanded(
+                      child: Container(
+                        padding: const EdgeInsets.only(left: 16, right: 16),
+                        child: TextFormField(
+                          style: TextStyle(
+                            fontFamily: 'WorkSans',
+                            fontWeight: FontWeight.bold,
+                            fontSize: 16,
+                            color: DesignCourseAppTheme.nearlyBlue,
+                          ),
+                          keyboardType: TextInputType.text,
+                          decoration: InputDecoration(
+                            labelText: 'Search for course',
+                            border: InputBorder.none,
+                            helperStyle: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 16,
+                              color: Color(0xFF207561),
+                            ),
+                            labelStyle: TextStyle(
+                              fontWeight: FontWeight.w600,
+                              fontSize: 16,
+                              letterSpacing: 0.2,
+                              color: Color(0xFF207561),
+                            ),
+                          ),
+                          onEditingComplete: () {},
+                        ),
+                      ),
+                    ),
+                    SizedBox(
+                      width: 60,
+                      height: 60,
+                      child: Icon(Icons.search, color: Color(0xFF207561)),
+                    )
+                  ],
+                ),
+              ),
+            ),
+          ),
+          const Expanded(
+            child: SizedBox(),
+          )
+        ],
+      ),
+    );
+  }
+
+  Widget getAppBarUI() {
+    return Padding(
+      padding: const EdgeInsets.only(top: 8.0, left: 18, right: 18),
+      child: Row(
+        children: <Widget>[
+          Expanded(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.end,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Text(
+                  'Choose your',
+                  textAlign: TextAlign.left,
+                  style: TextStyle(
+                    fontWeight: FontWeight.w400,
+                    fontSize: 14,
+                    letterSpacing: 0.2,
+                    color: DesignCourseAppTheme.grey,
+                  ),
+                ),
+                Text(
+                  'Design Course',
+                  textAlign: TextAlign.left,
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 22,
+                    letterSpacing: 0.27,
+                    color: DesignCourseAppTheme.darkerText,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          Container(
+            width: 60,
+            height: 60,
+            child: Image.asset('assets/design_course/userImage.png'),
+          )
         ],
       ),
     );
   }
 }
 
-class MyClipper extends CustomClipper<Path> {
-  @override
-  Path getClip(Size size) {
-    Path p = new Path();
-    p.lineTo(size.width, 0.0);
-    p.lineTo(size.width, size.height / 4.75);
-    p.lineTo(0.0, size.height / 3.75);
-    p.close();
-    return p;
-  }
-
-  @override
-  bool shouldReclip(CustomClipper oldClipper) {
-    return true;
-  }
-}
-
-class AwesomeListItem extends StatefulWidget {
-  String title;
-  String content;
-  Color color;
-  String image;
-
-  AwesomeListItem({this.title, this.content, this.color, this.image});
-
-  @override
-  _AwesomeListItemState createState() => new _AwesomeListItemState();
-}
-
-class _AwesomeListItemState extends State<AwesomeListItem> {
-  @override
-  Widget build(BuildContext context) {
-    return new Row(
-      children: <Widget>[
-        new Container(width: 10.0, height: 190.0, color: widget.color),
-        new Expanded(
-          child: new Padding(
-            padding:
-                const EdgeInsets.symmetric(vertical: 40.0, horizontal: 20.0),
-            child: new Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                new Text(
-                  widget.title,
-                  style: TextStyle(
-                      color: Colors.grey.shade800,
-                      fontSize: 18.0,
-                      fontWeight: FontWeight.bold),
-                ),
-                new Padding(
-                  padding: const EdgeInsets.only(top: 16.0),
-                  child: new Text(
-                    widget.content,
-                    style: TextStyle(
-                        color: Colors.grey.shade500,
-                        fontSize: 12.0,
-                        fontWeight: FontWeight.bold),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-        new Container(
-          height: 150.0,
-          width: 150.0,
-          color: Colors.white,
-          child: Stack(
-            children: <Widget>[
-              new Transform.translate(
-                offset: new Offset(50.0, 0.0),
-                child: new Container(
-                  height: 100.0,
-                  width: 100.0,
-                  color: widget.color,
-                ),
-              ),
-              new Transform.translate(
-                offset: Offset(10.0, 20.0),
-                child: new Card(
-                  elevation: 20.0,
-                  child: new Container(
-                    height: 120.0,
-                    width: 120.0,
-                    decoration: new BoxDecoration(
-                        color: Colors.white,
-                        border: Border.all(
-                            width: 10.0,
-                            color: Colors.white,
-                            style: BorderStyle.solid),
-                        image: DecorationImage(
-                          image: NetworkImage(widget.image),
-                        )),
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-      ],
-    );
-  }
+enum CategoryType {
+  ui,
+  coding,
+  basic,
 }
