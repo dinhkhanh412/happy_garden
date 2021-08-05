@@ -1,8 +1,9 @@
 import 'package:happy_garden/ui/page/detail/widget/course_info_screen.dart';
+import 'package:happy_garden/ui/page/detail/widget/cupertino_tabbar.dart'
+    as CupertinoTabBar;
 import 'package:happy_garden/ui/page/detail/widget/popular_course_list_view.dart';
 import 'package:flutter/material.dart';
 import 'package:happy_garden/ui/page/detail/theme/design_course_app_theme.dart';
-import 'package:happy_garden/ui/page/detail/widget/cupertino_tabbar.dart';
 import 'package:hexcolor/hexcolor.dart';
 
 class DesignCourseHomeScreen extends StatefulWidget {
@@ -12,6 +13,9 @@ class DesignCourseHomeScreen extends StatefulWidget {
 
 class _DesignCourseHomeScreenState extends State<DesignCourseHomeScreen> {
   CategoryType categoryType = CategoryType.ui;
+
+  int cupertinoTabBarValue = 1;
+  int cupertinoTabBarValueGetter() => cupertinoTabBarValue;
 
   @override
   Widget build(BuildContext context) {
@@ -31,6 +35,52 @@ class _DesignCourseHomeScreenState extends State<DesignCourseHomeScreen> {
                   height: MediaQuery.of(context).size.height,
                   child: Column(
                     children: <Widget>[
+                      Container(
+                        constraints: const BoxConstraints.expand(height: 20.0),
+                      ),
+                      CupertinoTabBar.CupertinoTabBar(
+                        const Color(0xFF3c4245),
+                        const Color(0xFF719192),
+                        [
+                          const Text(
+                            "PLANTS",
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 18.75,
+                              fontWeight: FontWeight.w400,
+                              fontFamily: "SFProRounded",
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
+                          const Text(
+                            "LOG",
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 18.75,
+                              fontWeight: FontWeight.w400,
+                              fontFamily: "SFProRounded",
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
+                          const Text(
+                            "SETTINGS",
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 18.75,
+                              fontWeight: FontWeight.w400,
+                              fontFamily: "SFProRounded",
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
+                        ],
+                        cupertinoTabBarValueGetter,
+                        (int index) {
+                          setState(() {
+                            cupertinoTabBarValue = index;
+                          });
+                        },
+                        useSeparators: true,
+                      ),
                       getSearchBarUI(),
                       Flexible(
                         child: getPopularCourseUI(),
@@ -53,6 +103,25 @@ class _DesignCourseHomeScreenState extends State<DesignCourseHomeScreen> {
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
+          Row(
+            children: [
+              Text(
+                'Your Plants',
+                textAlign: TextAlign.left,
+                style: TextStyle(
+                  fontWeight: FontWeight.w600,
+                  fontSize: 22,
+                  letterSpacing: 0.27,
+                  color: DesignCourseAppTheme.darkerText,
+                ),
+              ),
+              SizedBox(
+                width: 60,
+                height: 60,
+                child: Icon(Icons.edit, color: Color(0xFF3c4245)),
+              )
+            ],
+          ),
           Flexible(
             child: PopularCourseListView(
               callBack: () {
