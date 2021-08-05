@@ -1,6 +1,7 @@
 import 'package:happy_garden/ui/page/detail/theme/design_course_app_theme.dart';
 import 'package:happy_garden/ui/page/detail/model/category.dart';
 import 'package:flutter/material.dart';
+import 'package:hexcolor/hexcolor.dart';
 
 class PopularCourseListView extends StatefulWidget {
   const PopularCourseListView({Key key, this.callBack}) : super(key: key);
@@ -112,11 +113,9 @@ class CategoryView extends StatelessWidget {
                           Expanded(
                             child: Container(
                               decoration: BoxDecoration(
-                                color: Color(0xFF207561),
+                                color: HexColor('#F8FAFB'),
                                 borderRadius: const BorderRadius.all(
                                     Radius.circular(16.0)),
-                                // border: new Border.all(
-                                //     color: DesignCourseAppTheme.notWhite),
                               ),
                               child: Column(
                                 children: <Widget>[
@@ -141,56 +140,15 @@ class CategoryView extends StatelessWidget {
                                           ),
                                           Padding(
                                             padding: const EdgeInsets.only(
-                                                top: 8,
-                                                left: 16,
-                                                right: 16,
-                                                bottom: 8),
+                                              left: 16,
+                                              right: 16,
+                                            ),
                                             child: Row(
                                               mainAxisAlignment:
                                                   MainAxisAlignment
                                                       .spaceBetween,
                                               crossAxisAlignment:
                                                   CrossAxisAlignment.center,
-                                              children: <Widget>[
-                                                Text(
-                                                  '${category.lessonCount} lesson',
-                                                  textAlign: TextAlign.left,
-                                                  style: TextStyle(
-                                                    fontWeight: FontWeight.w200,
-                                                    fontSize: 12,
-                                                    letterSpacing: 0.27,
-                                                    color: DesignCourseAppTheme
-                                                        .grey,
-                                                  ),
-                                                ),
-                                                Container(
-                                                  child: Row(
-                                                    children: <Widget>[
-                                                      Text(
-                                                        '${category.rating}',
-                                                        textAlign:
-                                                            TextAlign.left,
-                                                        style: TextStyle(
-                                                          fontWeight:
-                                                              FontWeight.w200,
-                                                          fontSize: 18,
-                                                          letterSpacing: 0.27,
-                                                          color:
-                                                              DesignCourseAppTheme
-                                                                  .grey,
-                                                        ),
-                                                      ),
-                                                      Icon(
-                                                        Icons.star,
-                                                        color:
-                                                            DesignCourseAppTheme
-                                                                .nearlyBlue,
-                                                        size: 20,
-                                                      ),
-                                                    ],
-                                                  ),
-                                                )
-                                              ],
                                             ),
                                           ),
                                         ],
@@ -218,13 +176,6 @@ class CategoryView extends StatelessWidget {
                           decoration: BoxDecoration(
                             borderRadius:
                                 const BorderRadius.all(Radius.circular(16.0)),
-                            boxShadow: <BoxShadow>[
-                              BoxShadow(
-                                  color: DesignCourseAppTheme.grey
-                                      .withOpacity(0.2),
-                                  offset: const Offset(0.0, 0.0),
-                                  blurRadius: 6.0),
-                            ],
                           ),
                           child: ClipRRect(
                             borderRadius:
