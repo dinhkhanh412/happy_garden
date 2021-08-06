@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:happy_garden/ui/page/detail/theme/design_course_app_theme.dart';
+import 'package:happy_garden/ui/page/detail/theme/app_theme.dart';
 
 class CourseInfoScreen extends StatefulWidget {
   @override

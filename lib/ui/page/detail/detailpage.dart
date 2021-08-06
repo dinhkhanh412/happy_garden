@@ -1,10 +1,15 @@
+import 'package:flutter/cupertino.dart';
+import 'package:hexcolor/hexcolor.dart';
+import 'package:flutter/material.dart';
+
+import 'package:happy_garden/ui/page/detail/theme/app_theme.dart';
+import 'package:happy_garden/ui/page/detail/widget/list_view.dart';
 import 'package:happy_garden/ui/page/detail/widget/info_screen.dart';
+
 import 'package:happy_garden/ui/page/detail/widget/cupertino_tabbar.dart'
     as CupertinoTabBar;
-import 'package:happy_garden/ui/page/detail/widget/list_view.dart';
-import 'package:flutter/material.dart';
-import 'package:happy_garden/ui/page/detail/theme/app_theme.dart';
-import 'package:hexcolor/hexcolor.dart';
+
+import 'package:flutter/foundation.dart';
 
 class DesignCourseHomeScreen extends StatefulWidget {
   @override
@@ -77,6 +82,20 @@ class _DesignCourseHomeScreenState extends State<DesignCourseHomeScreen> {
                         (int index) {
                           setState(() {
                             cupertinoTabBarValue = index;
+                            if (index == 0) {
+                              return CupertinoTabView(
+                                builder: (BuildContext context) => MyFirstTab(),
+                              );
+                            } else if (index == 1) {
+                              return CupertinoTabView(
+                                builder: (BuildContext context) =>
+                                    MySecondTab(),
+                              );
+                            } else {
+                              return CupertinoTabView(
+                                builder: (BuildContext context) => MyThirdTab(),
+                              );
+                            }
                           });
                         },
                         useSeparators: true,
@@ -248,4 +267,31 @@ enum CategoryType {
   ui,
   coding,
   basic,
+}
+
+class MyFirstTab extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      color: Colors.redAccent,
+    );
+  }
+}
+
+class MySecondTab extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      color: Colors.greenAccent,
+    );
+  }
+}
+
+class MyThirdTab extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      color: Colors.blue,
+    );
+  }
 }
