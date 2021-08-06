@@ -77,7 +77,7 @@ class _DesignCourseHomeScreenState extends State<DesignCourseHomeScreen> {
                               ),
                             ),
                             ReorderableViewPage(),
-                            Icon(Icons.games),
+                            ReorderableViewPage(),
                           ]),
                         ))),
               ),
