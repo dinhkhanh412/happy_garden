@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:happy_garden/ui/page/detail/widget/list_view.dart';
 import 'package:happy_garden/ui/page/detail/widget/info_screen.dart';
 import 'package:happy_garden/ui/page/detail/widget/reorderable_view.dart';
+import 'package:happy_garden/ui/page/detail/widget/settings_screen.dart';
 
 class DesignCourseHomeScreen extends StatefulWidget {
   @override
@@ -77,7 +78,7 @@ class _DesignCourseHomeScreenState extends State<DesignCourseHomeScreen> {
                               ),
                             ),
                             ReorderableViewPage(),
-                            ReorderableViewPage(),
+                            SettingsScreen(),
                           ]),
                         ))),
               ),
