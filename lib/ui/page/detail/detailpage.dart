@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:flutter/material.dart';
 
@@ -8,8 +7,6 @@ import 'package:happy_garden/ui/page/detail/widget/info_screen.dart';
 
 import 'package:happy_garden/ui/page/detail/widget/cupertino_tabbar.dart'
     as CupertinoTabBar;
-
-import 'package:flutter/foundation.dart';
 
 class DesignCourseHomeScreen extends StatefulWidget {
   @override
@@ -37,76 +34,57 @@ class _DesignCourseHomeScreenState extends State<DesignCourseHomeScreen> {
             Expanded(
               child: SingleChildScrollView(
                 child: Container(
-                  height: MediaQuery.of(context).size.height,
-                  child: Column(
-                    children: <Widget>[
-                      Container(
-                        constraints: const BoxConstraints.expand(height: 20.0),
-                      ),
-                      CupertinoTabBar.CupertinoTabBar(
-                        const Color(0xFF3c4245),
-                        const Color(0xFF719192),
-                        [
-                          const Text(
-                            "PLANTS",
-                            style: const TextStyle(
-                              color: Colors.white,
-                              fontSize: 18.75,
-                              fontWeight: FontWeight.w400,
-                              fontFamily: "SFProRounded",
-                            ),
-                            textAlign: TextAlign.center,
+                    height: MediaQuery.of(context).size.height,
+                    child: DefaultTabController(
+                        length: 3,
+                        child: Scaffold(
+                          appBar: AppBar(
+                            backgroundColor: Colors.white,
+                            elevation: 0,
+                            bottom: TabBar(
+                                unselectedLabelColor: Colors.redAccent,
+                                indicatorSize: TabBarIndicatorSize.tab,
+                                indicator: BoxDecoration(
+                                    gradient: LinearGradient(colors: [
+                                      Color(0xFF3c4245),
+                                      Color(0xFF719192)
+                                    ]),
+                                    borderRadius: BorderRadius.circular(50),
+                                    color: Colors.redAccent),
+                                tabs: [
+                                  Tab(
+                                    child: Align(
+                                      alignment: Alignment.center,
+                                      child: Text("PLANTS"),
+                                    ),
+                                  ),
+                                  Tab(
+                                    child: Align(
+                                      alignment: Alignment.center,
+                                      child: Text("LOG"),
+                                    ),
+                                  ),
+                                  Tab(
+                                    child: Align(
+                                      alignment: Alignment.center,
+                                      child: Text("SETTINGS"),
+                                    ),
+                                  ),
+                                ]),
                           ),
-                          const Text(
-                            "LOG",
-                            style: const TextStyle(
-                              color: Colors.white,
-                              fontSize: 18.75,
-                              fontWeight: FontWeight.w400,
-                              fontFamily: "SFProRounded",
+                          body: TabBarView(children: [
+                            Center(
+                              child: Column(
+                                children: [
+                                  getSearchBarUI(),
+                                  Flexible(child: getPopularCourseUI()),
+                                ],
+                              ),
                             ),
-                            textAlign: TextAlign.center,
-                          ),
-                          const Text(
-                            "SETTINGS",
-                            style: const TextStyle(
-                              color: Colors.white,
-                              fontSize: 18.75,
-                              fontWeight: FontWeight.w400,
-                              fontFamily: "SFProRounded",
-                            ),
-                            textAlign: TextAlign.center,
-                          ),
-                        ],
-                        cupertinoTabBarValueGetter,
-                        (int index) {
-                          setState(() {
-                            cupertinoTabBarValue = index;
-                            if (index == 0) {
-                              return CupertinoTabView(
-                                builder: (BuildContext context) => MyFirstTab(),
-                              );
-                            } else if (index == 1) {
-                              return CupertinoTabView(
-                                builder: (BuildContext context) =>
-                                    MySecondTab(),
-                              );
-                            } else {
-                              return CupertinoTabView(
-                                builder: (BuildContext context) => MyThirdTab(),
-                              );
-                            }
-                          });
-                        },
-                        useSeparators: true,
-                      ),
-                      getSearchBarUI(),
-                      Flexible(
-                        child: getPopularCourseUI(),
-                      ),
-                    ],
-                  ),
-                ),
+                            Icon(Icons.movie),
+                            Icon(Icons.games),
+                          ]),
+                        ))),
               ),
             ),
           ],
@@ -267,31 +245,4 @@ enum CategoryType {
   ui,
   coding,
   basic,
-}
-
-class MyFirstTab extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      color: Colors.redAccent,
-    );
-  }
-}
-
-class MySecondTab extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      color: Colors.greenAccent,
-    );
-  }
-}
-
-class MyThirdTab extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      color: Colors.blue,
-    );
-  }
 }

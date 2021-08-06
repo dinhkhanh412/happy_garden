@@ -19,7 +19,7 @@ class MyApp extends StatelessWidget {
     return ChangeNotifierProvider<MQTTManager>(
       create: (context) => service_locator<MQTTManager>(),
       child: MaterialApp(
-          title: 'Flutter Demo',
+          title: 'Happy Garden',
           theme: ThemeData(
             primarySwatch: Colors.blue,
             visualDensity: VisualDensity.adaptivePlatformDensity,
