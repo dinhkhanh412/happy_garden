@@ -1,4 +1,3 @@
-import 'package:happy_garden/ui/page/detail/theme/app_theme.dart';
 import 'package:happy_garden/ui/page/detail/model/category.dart';
 import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
@@ -125,7 +124,7 @@ class CategoryView extends StatelessWidget {
                                         children: <Widget>[
                                           Padding(
                                             padding: const EdgeInsets.only(
-                                                top: 16, left: 16, right: 16),
+                                                left: 16, right: 16),
                                             child: Text(
                                               category.title,
                                               textAlign: TextAlign.left,
@@ -133,8 +132,6 @@ class CategoryView extends StatelessWidget {
                                                 fontWeight: FontWeight.w600,
                                                 fontSize: 16,
                                                 letterSpacing: 0.27,
-                                                color: DesignCourseAppTheme
-                                                    .darkerText,
                                               ),
                                             ),
                                           ),
@@ -155,23 +152,16 @@ class CategoryView extends StatelessWidget {
                                       ),
                                     ),
                                   ),
-                                  const SizedBox(
-                                    width: 48,
-                                  ),
                                 ],
                               ),
                             ),
-                          ),
-                          const SizedBox(
-                            height: 48,
                           ),
                         ],
                       ),
                     ),
                     Container(
                       child: Padding(
-                        padding:
-                            const EdgeInsets.only(top: 24, right: 16, left: 16),
+                        padding: const EdgeInsets.only(right: 16, left: 16),
                         child: Container(
                           decoration: BoxDecoration(
                             borderRadius:

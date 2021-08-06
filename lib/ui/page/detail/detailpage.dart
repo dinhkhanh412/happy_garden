@@ -1,12 +1,8 @@
 import 'package:hexcolor/hexcolor.dart';
 import 'package:flutter/material.dart';
 
-import 'package:happy_garden/ui/page/detail/theme/app_theme.dart';
 import 'package:happy_garden/ui/page/detail/widget/list_view.dart';
 import 'package:happy_garden/ui/page/detail/widget/info_screen.dart';
-
-import 'package:happy_garden/ui/page/detail/widget/cupertino_tabbar.dart'
-    as CupertinoTabBar;
 
 class DesignCourseHomeScreen extends StatefulWidget {
   @override
@@ -14,15 +10,12 @@ class DesignCourseHomeScreen extends StatefulWidget {
 }
 
 class _DesignCourseHomeScreenState extends State<DesignCourseHomeScreen> {
-  CategoryType categoryType = CategoryType.ui;
-
   int cupertinoTabBarValue = 1;
   int cupertinoTabBarValueGetter() => cupertinoTabBarValue;
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: DesignCourseAppTheme.nearlyWhite,
       child: Scaffold(
         backgroundColor: Colors.transparent,
         body: Column(
@@ -34,6 +27,7 @@ class _DesignCourseHomeScreenState extends State<DesignCourseHomeScreen> {
             Expanded(
               child: SingleChildScrollView(
                 child: Container(
+                    width: MediaQuery.of(context).size.width * 0.9,
                     height: MediaQuery.of(context).size.height,
                     child: DefaultTabController(
                         length: 3,
@@ -109,7 +103,6 @@ class _DesignCourseHomeScreenState extends State<DesignCourseHomeScreen> {
                   fontWeight: FontWeight.w600,
                   fontSize: 22,
                   letterSpacing: 0.27,
-                  color: DesignCourseAppTheme.darkerText,
                 ),
               ),
               SizedBox(
@@ -172,7 +165,6 @@ class _DesignCourseHomeScreenState extends State<DesignCourseHomeScreen> {
                             fontFamily: 'WorkSans',
                             fontWeight: FontWeight.bold,
                             fontSize: 16,
-                            color: DesignCourseAppTheme.nearlyBlue,
                           ),
                           keyboardType: TextInputType.text,
                           decoration: InputDecoration(
@@ -229,7 +221,6 @@ class _DesignCourseHomeScreenState extends State<DesignCourseHomeScreen> {
                     fontWeight: FontWeight.bold,
                     fontSize: 22,
                     letterSpacing: 0.27,
-                    color: DesignCourseAppTheme.darkerText,
                   ),
                 ),
               ],
@@ -239,10 +230,4 @@ class _DesignCourseHomeScreenState extends State<DesignCourseHomeScreen> {
       ),
     );
   }
-}
-
-enum CategoryType {
-  ui,
-  coding,
-  basic,
 }
