@@ -5,6 +5,8 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:custom_switch/custom_switch.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:happy_garden/manage/mqtt/MQTTAppState.dart';
+import 'package:happy_garden/models/Device_Auto.dart';
+import 'package:happy_garden/models/global_device.dart';
 
 import 'package:happy_garden/ui/page/home/widget/ImageSwiper.dart';
 import 'package:happy_garden/ui/page/home/widget/ElementCard.dart';
@@ -12,6 +14,7 @@ import 'package:happy_garden/ui/page/home/widget/ElementCard.dart';
 import 'package:happy_garden/manage/mqtt/MQTTManager.dart';
 import 'package:happy_garden/api/device_api.dart';
 import 'package:happy_garden/models/Feed.dart';
+import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:provider/provider.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -31,6 +34,7 @@ class _HomeScreenState extends State<HomeScreen> {
   bool online = false;
   bool status = false;
   bool isLoading = true;
+  TimeOfDay _time = TimeOfDay(hour: 7, minute: 15);
 
   bool connectivity = false;
   num temperature = 0;
@@ -38,6 +42,9 @@ class _HomeScreenState extends State<HomeScreen> {
   num waterLv = 0;
   num lightLv = 0;
   bool pumpStart = false;
+  bool lightOn = false;
+
+  BoxConstraints constraints;
 
   @override
   void initState() {
@@ -70,6 +77,15 @@ class _HomeScreenState extends State<HomeScreen> {
           }
           break;
 
+        case 1:
+          {
+            setState(() {
+              lightOn = int.parse(data) == 1 ? true : false;
+              var deviceStatus = context.read<GlobalDeviceStatus>();
+              deviceStatus.setDeviceStatus(lightOn, 0);
+            });
+            break;
+          }
         default:
           {
             //statements;
@@ -90,6 +106,9 @@ class _HomeScreenState extends State<HomeScreen> {
           {
             setState(() {
               pumpStart = (data == "1") ? true : false;
+              var deviceStatus = context.read<GlobalDeviceStatus>();
+              deviceStatus.setDeviceStatus(pumpStart, 1);
+
             });
           }
           break;
@@ -111,6 +130,7 @@ class _HomeScreenState extends State<HomeScreen> {
     });
   }
 
+
   @override
   Widget build(BuildContext context) {
     if (isLoading) {
@@ -118,25 +138,25 @@ class _HomeScreenState extends State<HomeScreen> {
           title: "This is a StatafulWidget",
           home: Scaffold(
               body: Align(
-                alignment: Alignment.center,
-                child:
-                Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-                  CircularProgressIndicator(),
-                  SizedBox(
-                    height: 10,
-                  ),
-                  Text(
-                    "Please wait....",
-                    style: GoogleFonts.mulish(
-                      color: Colors.green,
-                      fontSize: 18.0,
-                    ),
-                  )
-                ]),
-              )));
+            alignment: Alignment.center,
+            child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+              CircularProgressIndicator(),
+              SizedBox(
+                height: 10,
+              ),
+              Text(
+                "Please wait....",
+                style: GoogleFonts.mulish(
+                  color: Colors.green,
+                  fontSize: 18.0,
+                ),
+              )
+            ]),
+          )));
     }
     //_manager.subScribeTo(_topicTextController.text);
     return LayoutBuilder(builder: (context, constraints) {
+      this.constraints = constraints;
       return Scaffold(
         backgroundColor: Color(0xffF5FDFB),
         body: SingleChildScrollView(
@@ -175,45 +195,6 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    GestureDetector(
-                      onTap: () {
-                        displayToastMessage("Humidity", context);
-                      },
-                      child: Container(
-                        constraints: BoxConstraints.expand(
-                            height: constraints.maxWidth * 0.3, width: constraints.maxWidth * 0.3),
-                        child: card(context, "Humidity", Icons.cloud, humidity.toString()),
-                      ),
-                    ),
-                    GestureDetector(
-                      onTap: () {
-                        displayToastMessage("Temperature", context);
-                      },
-                      child: Container(
-                        constraints: BoxConstraints.expand(
-                            height: constraints.maxWidth * 0.3, width: constraints.maxWidth * 0.3),
-                        child: card(context, "Temperature", Icons.thermostat_sharp, temperature.toString()),
-                      ),
-                    ),
-                    GestureDetector(
-                      onTap: () {
-                        displayToastMessage("Water Level", context);
-                      },
-                      child: Container(
-                        constraints: BoxConstraints.expand(
-                            height: constraints.maxWidth * 0.3, width: constraints.maxWidth * 0.3),
-                        child: card(context, "Water Level", Icons.eco, waterLv.toString()),
-                      ),
-                    ),
-                  ],
-                ),
-                SizedBox(
-                  height: constraints.maxHeight * 0.01,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
                   //Center Row contents horizontally,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
@@ -224,17 +205,60 @@ class _HomeScreenState extends State<HomeScreen> {
                       child: Container(
                         constraints: BoxConstraints.expand(
                             height: constraints.maxWidth * 0.3, width: constraints.maxWidth * 0.3),
-                        child: card(context, "Connectivity", Icons.network_wifi, connectivity ? "Online" : "Offline"),
+                        child: card(context, "Kết nối", Icons.network_wifi,
+                            connectivity ? "Online" : "Offline"),
                       ),
                     ),
                     GestureDetector(
                       onTap: () {
-                        displayToastMessage("Light Status", context);
+                        showBottomSheet(constraints);
                       },
                       child: Container(
                           constraints: BoxConstraints.expand(
-                              height: constraints.maxWidth * 0.3, width: constraints.maxWidth * 0.6),
-                          child: light(lightLv)),
+                              height: constraints.maxWidth * 0.3,
+                              width: constraints.maxWidth * 0.6),
+                          child: card(context, "MÁY BƠM", Icons.add_alarm_rounded,
+                              pumpStart ? "ĐANG CHẠY" : "TẮT")),
+                    ),
+                  ],
+                ),
+                SizedBox(
+                  height: constraints.maxHeight * 0.01,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    GestureDetector(
+                      onTap: () {
+                        displayToastMessage("Độ ẩm", context);
+                      },
+                      child: Container(
+                        constraints: BoxConstraints.expand(
+                            height: constraints.maxWidth * 0.3, width: constraints.maxWidth * 0.3),
+                        child: card(context, "Độ ẩm", Icons.cloud, humidity.toString()),
+                      ),
+                    ),
+                    GestureDetector(
+                      onTap: () {
+                        displayToastMessage("Nhiệt độ", context);
+                      },
+                      child: Container(
+                        constraints: BoxConstraints.expand(
+                            height: constraints.maxWidth * 0.3, width: constraints.maxWidth * 0.3),
+                        child: card(context, "Nhiệt độ", Icons.thermostat_sharp,
+                            temperature.toString() + "°C"),
+                      ),
+                    ),
+                    GestureDetector(
+                      onTap: () {
+                        displayToastMessage("Độ ẩm đất", context);
+                      },
+                      child: Container(
+                        constraints: BoxConstraints.expand(
+                            height: constraints.maxWidth * 0.3, width: constraints.maxWidth * 0.3),
+                        child: card(context, "Độ ẩm đất", Icons.eco, waterLv.toString()),
+                      ),
                     ),
                   ],
                 ),
@@ -248,57 +272,57 @@ class _HomeScreenState extends State<HomeScreen> {
                   children: [
                     GestureDetector(
                       onTap: () {
-                        displayToastMessage("Status", context);
+                        showMaterialModalBottomSheet(
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10.0),
+                            ),
+                            context: context,
+                            builder: (context) =>
+                                bottomSheet(context, constraints, true));
                       },
                       child: Container(
-                        constraints: BoxConstraints.expand(
-                            height: constraints.maxWidth * 0.3, width: constraints.maxWidth * 0.6),
-                        child: cardStat(context, "Light Status", Icons.lightbulb, "OFF"),
-                      ),
+                          constraints: BoxConstraints.expand(
+                              height: constraints.maxWidth * 0.3,
+                              width: constraints.maxWidth * 0.6),
+                          child: card(context, "Đèn LED", Icons.add_alarm_rounded,
+                              lightOn ? "BẬT" : "TẮT")),
                     ),
                     GestureDetector(
                       onTap: () {
-                        displayToastMessage("Alarm", context);
+                        displayToastMessage("Cường độ sáng", context);
                       },
                       child: Container(
-                        constraints: BoxConstraints.expand(
-                            height: constraints.maxWidth * 0.3, width: constraints.maxWidth * 0.3),
-                        child: card(context, "Alarm", Icons.alarm, "OFF"),
-                      ),
-                    ),
+                          constraints: BoxConstraints.expand(
+                              height: constraints.maxWidth * 0.3,
+                              width: constraints.maxWidth * 0.3),
+                          child:
+                              card(context, "Cường độ sáng", Icons.lightbulb, lightLv.toString())),
+                    )
                   ],
                 ),
               ],
             ),
           ),
         ),
-        bottomNavigationBar: BottomNavigationBar(
-          items: const <BottomNavigationBarItem>[
-            BottomNavigationBarItem(
-              icon: Icon(Icons.home),
-              label: 'Home',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.business),
-              label: 'Business',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.school),
-              label: 'School',
-            ),
-          ],
-          currentIndex: _selectedIndex,
-          selectedItemColor: Color(0xff0C9359),
-          onTap: _onItemTapped,
-        ),
+
       );
     });
   }
 
-
-  Widget light(num text) {
-    return card(context, "Light Status", Icons.lightbulb, text.toString());
+  void sendLight(bool isOn) {
+    _manager_1.publishInputDevice(1, isOn ? "1" : "0");
+    setState(() {
+      lightOn = isOn;
+    });
   }
+
+  void sendPump(bool isOn) {
+    _manager_2.publishInputDevice(11, isOn ? "1" : "0");
+    setState(() {
+      pumpStart = isOn;
+    });
+  }
+
 
   //function
   void _onItemTapped(int index) {
@@ -310,53 +334,146 @@ class _HomeScreenState extends State<HomeScreen> {
   void _configureAndConnect() async {
     String server1 = 'server_1';
     String server2 = 'server_2';
-    await _manager_1.initializeMQTTClient(identifier: server1, server: "dinhkhanh412");
-    await _manager_2.initializeMQTTClient(identifier: server2, server: "dinhkhanh412");
+    await _manager_1.initializeMQTTClient(identifier: server1, server: "BBC");
+    await _manager_2.initializeMQTTClient(identifier: server2, server: "BBC1");
     _manager_1.connect();
     _manager_2.connect();
   }
 
   void _initValue() async {
     DeviceAPI deviceAPI = new DeviceAPI(widget.UID);
+    dynamic allDevice = await deviceAPI.getAllDevice(widget.UID);
 
-    // temp + humi
-    Feed temp = await deviceAPI.getDevice("7");
+    print(allDevice[0].toString());
+    Feed temp = new Feed.fromJson(allDevice[0]);
+
     String data = temp.data;
     final sub = data.indexOf("-");
     setState(() {
       temperature = int.parse(data.substring(0, sub));
       humidity = int.parse(data.substring(sub + 1, data.length));
     });
-
     // soil
-    temp = await deviceAPI.getDevice("9");
+    // temp = await deviceAPI.getDevice("9");
+    temp = new Feed.fromJson(allDevice[1]);
     setState(() {
       waterLv = int.parse(temp.data);
     });
 
     // light
-    temp = await deviceAPI.getDevice("13");
+    // temp = await deviceAPI.getDevice("13");
+    temp = new Feed.fromJson(allDevice[2]);
+    // print(temp.data);
     setState(() {
       lightLv = int.parse(temp.data);
     });
 
     // pump
-    temp = await deviceAPI.getDevice("11");
+    // temp = await deviceAPI.getDevice("11");
+    temp = new Feed.fromJson(allDevice[3]);
     setState(() {
       pumpStart = (temp.data == "1") ? true : false;
     });
 
-    //Get all parameter
-    dynamic allDevice = await deviceAPI.getAllDevice(widget.UID);
-    if (allDevice.toString() == "None") {
+
+    temp = new Feed.fromJson(allDevice[4]);
+    setState(() {
+      lightOn = (temp.data == "1") ? true : false;
+    });
+
+    var deviceStatus = context.read<GlobalDeviceStatus>();
+    deviceStatus.setDeviceStatus(pumpStart, 1);
+    deviceStatus.setDeviceStatus(lightOn, 0);
+    setState(() {
+      connectivity = true;
+      isLoading = false;
+    });
+  }
+
+
+  void _selectTime() async {
+    final TimeOfDay newTime = await showTimePicker(
+      context: context,
+      initialTime: _time,
+      initialEntryMode: TimePickerEntryMode.input,
+    );
+    if (newTime != null) {
       setState(() {
-        connectivity = true;
-        isLoading = false;
+        _time = newTime;
+        print(_time);
       });
-      return;
     }
   }
+
+  Column bottomSheet(BuildContext context, BoxConstraints constrains, bool isLed) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: <Widget>[
+        SizedBox(height: 20),
+        Row(
+          children: [
+            SizedBox(width: 10),
+            Text(
+              isLed? "Bật/Tắt đèn LED:" : "Bật/Tắt máy bơm:",
+              style: TextStyle(fontSize: 18, fontFamily: "Mulish"),
+            ),
+            SizedBox(
+              width: constrains.maxWidth * 0.2,
+            ),
+            Consumer<GlobalDeviceStatus>(
+              builder: (context, status, child) {
+                return CustomSwitch(
+                  activeColor: Color(0xff0C9359),
+                  value: isLed ? lightOn : pumpStart,
+                  onChanged: (value) {
+                    var deviceStatus = context.read<GlobalDeviceStatus>();
+                    deviceStatus.setDeviceStatus(value, isLed ? 0 : 1);
+                    isLed ? sendLight(value) : sendPump(value);
+                    setState(() {
+                      if (isLed) lightOn =  value;
+                      else pumpStart = value;
+                    });
+                  },
+                );
+              },
+            )
+          ],
+        ),
+        SizedBox(height: 20),
+        Row(
+          children: [
+            SizedBox(width: 10),
+            Text(
+              "Chế độ tự động:",
+              style: TextStyle(fontSize: 18, fontFamily: "Mulish"),
+            ),
+            SizedBox(
+              width: constrains.maxWidth * 0.2,
+            ),
+          ],
+        ),
+
+        SizedBox(height: 50),
+        ExpansionPanelList(
+          animationDuration: Duration(seconds: 2),
+          elevation: 2,
+
+        ),
+      ],
+    );
+  }
+
+  void showBottomSheet(BoxConstraints constraints ){
+    showMaterialModalBottomSheet(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10.0),
+        ),
+        context: context,
+        builder: (context) =>
+            bottomSheet(context, constraints, false));
+  }
 }
+
 
 displayToastMessage(String message, BuildContext context) {
   Fluttertoast.showToast(msg: message);
