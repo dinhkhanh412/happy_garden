@@ -115,25 +115,25 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     if (isLoading) {
       return MaterialApp(
-          title: "This is a StatafulWidget",
+          title: "Home",
           home: Scaffold(
               body: Align(
-                alignment: Alignment.center,
-                child:
+            alignment: Alignment.center,
+            child:
                 Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-                  CircularProgressIndicator(),
-                  SizedBox(
-                    height: 10,
-                  ),
-                  Text(
-                    "Please wait....",
-                    style: GoogleFonts.mulish(
-                      color: Colors.green,
-                      fontSize: 18.0,
-                    ),
-                  )
-                ]),
-              )));
+              CircularProgressIndicator(),
+              SizedBox(
+                height: 10,
+              ),
+              Text(
+                "Please wait....",
+                style: GoogleFonts.mulish(
+                  color: Colors.green,
+                  fontSize: 18.0,
+                ),
+              )
+            ]),
+          )));
     }
     //_manager.subScribeTo(_topicTextController.text);
     return LayoutBuilder(builder: (context, constraints) {
@@ -167,7 +167,8 @@ class _HomeScreenState extends State<HomeScreen> {
                   height: constraints.maxHeight * 0.025,
                 ),
                 Container(
-                  constraints: BoxConstraints.expand(height: constraints.maxHeight * 0.25),
+                  constraints: BoxConstraints.expand(
+                      height: constraints.maxHeight * 0.25),
                   child: imageSwiper(context, constraints),
                 ),
                 SizedBox(
@@ -183,8 +184,10 @@ class _HomeScreenState extends State<HomeScreen> {
                       },
                       child: Container(
                         constraints: BoxConstraints.expand(
-                            height: constraints.maxWidth * 0.3, width: constraints.maxWidth * 0.3),
-                        child: card(context, "Humidity", Icons.cloud, humidity.toString()),
+                            height: constraints.maxWidth * 0.3,
+                            width: constraints.maxWidth * 0.3),
+                        child: card(context, "Humidity", Icons.cloud,
+                            humidity.toString()),
                       ),
                     ),
                     GestureDetector(
@@ -193,8 +196,10 @@ class _HomeScreenState extends State<HomeScreen> {
                       },
                       child: Container(
                         constraints: BoxConstraints.expand(
-                            height: constraints.maxWidth * 0.3, width: constraints.maxWidth * 0.3),
-                        child: card(context, "Temperature", Icons.thermostat_sharp, temperature.toString()),
+                            height: constraints.maxWidth * 0.3,
+                            width: constraints.maxWidth * 0.3),
+                        child: card(context, "Temperature",
+                            Icons.thermostat_sharp, temperature.toString()),
                       ),
                     ),
                     GestureDetector(
@@ -203,8 +208,10 @@ class _HomeScreenState extends State<HomeScreen> {
                       },
                       child: Container(
                         constraints: BoxConstraints.expand(
-                            height: constraints.maxWidth * 0.3, width: constraints.maxWidth * 0.3),
-                        child: card(context, "Water Level", Icons.eco, waterLv.toString()),
+                            height: constraints.maxWidth * 0.3,
+                            width: constraints.maxWidth * 0.3),
+                        child: card(context, "Water Level", Icons.eco,
+                            waterLv.toString()),
                       ),
                     ),
                   ],
@@ -223,8 +230,10 @@ class _HomeScreenState extends State<HomeScreen> {
                       },
                       child: Container(
                         constraints: BoxConstraints.expand(
-                            height: constraints.maxWidth * 0.3, width: constraints.maxWidth * 0.3),
-                        child: card(context, "Connectivity", Icons.network_wifi, connectivity ? "Online" : "Offline"),
+                            height: constraints.maxWidth * 0.3,
+                            width: constraints.maxWidth * 0.3),
+                        child: card(context, "Connectivity", Icons.network_wifi,
+                            connectivity ? "Online" : "Offline"),
                       ),
                     ),
                     GestureDetector(
@@ -233,7 +242,8 @@ class _HomeScreenState extends State<HomeScreen> {
                       },
                       child: Container(
                           constraints: BoxConstraints.expand(
-                              height: constraints.maxWidth * 0.3, width: constraints.maxWidth * 0.6),
+                              height: constraints.maxWidth * 0.3,
+                              width: constraints.maxWidth * 0.6),
                           child: light(lightLv)),
                     ),
                   ],
@@ -252,8 +262,10 @@ class _HomeScreenState extends State<HomeScreen> {
                       },
                       child: Container(
                         constraints: BoxConstraints.expand(
-                            height: constraints.maxWidth * 0.3, width: constraints.maxWidth * 0.6),
-                        child: cardStat(context, "Light Status", Icons.lightbulb, "OFF"),
+                            height: constraints.maxWidth * 0.3,
+                            width: constraints.maxWidth * 0.6),
+                        child: cardStat(
+                            context, "Light Status", Icons.lightbulb, "OFF"),
                       ),
                     ),
                     GestureDetector(
@@ -262,7 +274,8 @@ class _HomeScreenState extends State<HomeScreen> {
                       },
                       child: Container(
                         constraints: BoxConstraints.expand(
-                            height: constraints.maxWidth * 0.3, width: constraints.maxWidth * 0.3),
+                            height: constraints.maxWidth * 0.3,
+                            width: constraints.maxWidth * 0.3),
                         child: card(context, "Alarm", Icons.alarm, "OFF"),
                       ),
                     ),
@@ -295,7 +308,6 @@ class _HomeScreenState extends State<HomeScreen> {
     });
   }
 
-
   Widget light(num text) {
     return card(context, "Light Status", Icons.lightbulb, text.toString());
   }
@@ -310,8 +322,10 @@ class _HomeScreenState extends State<HomeScreen> {
   void _configureAndConnect() async {
     String server1 = 'server_1';
     String server2 = 'server_2';
-    await _manager_1.initializeMQTTClient(identifier: server1, server: "dinhkhanh412");
-    await _manager_2.initializeMQTTClient(identifier: server2, server: "dinhkhanh412");
+    await _manager_1.initializeMQTTClient(
+        identifier: server1, server: "dinhkhanh412");
+    await _manager_2.initializeMQTTClient(
+        identifier: server2, server: "dinhkhanh412");
     _manager_1.connect();
     _manager_2.connect();
   }
