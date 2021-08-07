@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:happy_garden/ui/page/auth/sign_in_screen.dart';
 import 'package:happy_garden/ui/page/home/homepage.dart';
 import 'package:happy_garden/ui/page/welcome_page.dart';
 import 'package:provider/provider.dart';
@@ -7,7 +8,6 @@ import 'helpers/service_locator.dart';
 import 'manage/mqtt/MQTTManager.dart';
 
 import 'package:happy_garden/ui/page/detail/detailpage.dart';
-import 'package:happy_garden/ui/page/login/login_page.dart';
 
 void main() {
   setupLocator();
@@ -30,7 +30,7 @@ class MyApp extends StatelessWidget {
             // '/': (BuildContext context) =>
             //     HomeScreen(UID: "61063c60d95daa29e8639f65", gardenName: "Home")
             // '/': (BuildContext context) => DesignCourseHomeScreen()
-            '/': (BuildContext context) => LoginPage()
+            '/': (BuildContext context) => SignInScreen()
           }),
     );
   }
