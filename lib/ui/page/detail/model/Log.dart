@@ -1,13 +1,5 @@
 class Log {
-  final String text;
-  final String time;
+  String x;
 
-  const Log({
-    this.text,
-    this.time,
-  });
-
-  factory Log.fromJson(Map<String, dynamic> json) {
-    return Log(text: json['text'] as String, time: json['time'] as String);
-  }
+  Log(this.x);
 }
