@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:custom_switch/custom_switch.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:happy_garden/api/schedule_api.dart';
 import 'package:happy_garden/manage/mqtt/MQTTAppState.dart';
 import 'package:happy_garden/models/Device_Auto.dart';
 import 'package:happy_garden/models/global_device.dart';
@@ -30,11 +31,14 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   MQTTManager _manager_1 = new MQTTManager();
   MQTTManager _manager_2 = new MQTTManager();
+
+  DeviceAPI deviceAPI;
+  ScheduleAPI scheduleAPI;
+
   int _selectedIndex = 0;
   bool online = false;
   bool status = false;
   bool isLoading = true;
-  TimeOfDay _time = TimeOfDay(hour: 7, minute: 15);
 
   bool connectivity = false;
   num temperature = 0;
@@ -43,6 +47,14 @@ class _HomeScreenState extends State<HomeScreen> {
   num lightLv = 0;
   bool pumpStart = false;
   bool lightOn = false;
+
+  bool pumpAuto = false;
+  TimeOfDay pumpTimeOn = TimeOfDay(hour: 7, minute: 15);
+  TimeOfDay pumpTimeOff = TimeOfDay(hour: 7, minute: 15);
+
+  bool ledAuto = false;
+  TimeOfDay ledTimeOn = TimeOfDay(hour: 7, minute: 15);
+  TimeOfDay ledTimeOff = TimeOfDay(hour: 7, minute: 15);
 
   BoxConstraints constraints;
 
@@ -108,7 +120,6 @@ class _HomeScreenState extends State<HomeScreen> {
               pumpStart = (data == "1") ? true : false;
               var deviceStatus = context.read<GlobalDeviceStatus>();
               deviceStatus.setDeviceStatus(pumpStart, 1);
-
             });
           }
           break;
@@ -129,7 +140,6 @@ class _HomeScreenState extends State<HomeScreen> {
       }
     });
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -277,8 +287,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               borderRadius: BorderRadius.circular(10.0),
                             ),
                             context: context,
-                            builder: (context) =>
-                                bottomSheet(context, constraints, true));
+                            builder: (context) => bottomSheet(context, constraints, true));
                       },
                       child: Container(
                           constraints: BoxConstraints.expand(
@@ -304,7 +313,6 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ),
         ),
-
       );
     });
   }
@@ -323,7 +331,6 @@ class _HomeScreenState extends State<HomeScreen> {
     });
   }
 
-
   //function
   void _onItemTapped(int index) {
     setState(() {
@@ -341,10 +348,11 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   void _initValue() async {
-    DeviceAPI deviceAPI = new DeviceAPI(widget.UID);
+    deviceAPI = new DeviceAPI(widget.UID);
+    scheduleAPI = new ScheduleAPI(widget.UID);
+
     dynamic allDevice = await deviceAPI.getAllDevice(widget.UID);
 
-    print(allDevice[0].toString());
     Feed temp = new Feed.fromJson(allDevice[0]);
 
     String data = temp.data;
@@ -375,7 +383,6 @@ class _HomeScreenState extends State<HomeScreen> {
       pumpStart = (temp.data == "1") ? true : false;
     });
 
-
     temp = new Feed.fromJson(allDevice[4]);
     setState(() {
       lightOn = (temp.data == "1") ? true : false;
@@ -384,23 +391,46 @@ class _HomeScreenState extends State<HomeScreen> {
     var deviceStatus = context.read<GlobalDeviceStatus>();
     deviceStatus.setDeviceStatus(pumpStart, 1);
     deviceStatus.setDeviceStatus(lightOn, 0);
+
+    dynamic scheduleStatus =  await scheduleAPI.getSchedule();
+    dynamic scheduleData = scheduleStatus['data'];
+
+    DeviceAuto pump = new DeviceAuto.fromJson(scheduleData[1]);
+    String pumpOn = pump.hOn;
+    String pumpOff = pump.hOff;
+    pumpTimeOn = TimeOfDay(hour:int.parse(pumpOn.split(":")[0]),minute: int.parse(pumpOn.split(":")[1]));
+    pumpTimeOff = TimeOfDay(hour:int.parse(pumpOff.split(":")[0]),minute: int.parse(pumpOff.split(":")[1]));
+    pumpAuto = pump.status;
+
+    DeviceAuto led = new DeviceAuto.fromJson(scheduleData[2]);
+    String ledOn = led.hOn;
+    String ledOff = led.hOff;
+    pumpTimeOn = TimeOfDay(hour:int.parse(ledOn.split(":")[0]),minute: int.parse(ledOn.split(":")[1]));
+    pumpTimeOff = TimeOfDay(hour:int.parse(ledOff.split(":")[0]),minute: int.parse(ledOff.split(":")[1]));
+    ledAuto = led.status;
+
     setState(() {
       connectivity = true;
       isLoading = false;
     });
   }
 
-
-  void _selectTime() async {
+  void _selectTime(bool isLed, bool isTimeOn) async {
     final TimeOfDay newTime = await showTimePicker(
       context: context,
-      initialTime: _time,
+      initialTime: isLed ? ( isTimeOn ? ledTimeOn : ledTimeOff) : (isTimeOn ? pumpTimeOn : pumpTimeOff),
       initialEntryMode: TimePickerEntryMode.input,
     );
     if (newTime != null) {
       setState(() {
-        _time = newTime;
-        print(_time);
+        if (isLed){
+          if (isTimeOn) ledTimeOn = newTime;
+          else ledTimeOff = newTime;
+        }
+        else {
+          if (isTimeOn) pumpTimeOn = newTime;
+          else pumpTimeOff = newTime;
+        }
       });
     }
   }
@@ -408,13 +438,14 @@ class _HomeScreenState extends State<HomeScreen> {
   Column bottomSheet(BuildContext context, BoxConstraints constrains, bool isLed) {
     return Column(
       mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         SizedBox(height: 20),
         Row(
           children: [
             SizedBox(width: 10),
             Text(
-              isLed? "Bật/Tắt đèn LED:" : "Bật/Tắt máy bơm:",
+              isLed ? "Bật/Tắt đèn LED:" : "Bật/Tắt máy bơm:",
               style: TextStyle(fontSize: 18, fontFamily: "Mulish"),
             ),
             SizedBox(
@@ -430,8 +461,10 @@ class _HomeScreenState extends State<HomeScreen> {
                     deviceStatus.setDeviceStatus(value, isLed ? 0 : 1);
                     isLed ? sendLight(value) : sendPump(value);
                     setState(() {
-                      if (isLed) lightOn =  value;
-                      else pumpStart = value;
+                      if (isLed)
+                        lightOn = value;
+                      else
+                        pumpStart = value;
                     });
                   },
                 );
@@ -448,32 +481,64 @@ class _HomeScreenState extends State<HomeScreen> {
               style: TextStyle(fontSize: 18, fontFamily: "Mulish"),
             ),
             SizedBox(
-              width: constrains.maxWidth * 0.2,
+              width: constrains.maxWidth * 0.25,
             ),
+            Align(
+              alignment: Alignment.centerLeft,
+              child: CustomSwitch(
+                activeColor: Color(0xff0C9359),
+                value: pumpAuto,
+                onChanged: (value) {
+                  pumpAuto = !pumpAuto;
+                  print("Value" + pumpAuto.toString());
+                },
+              ),
+            )
           ],
         ),
+        SizedBox(height: 20),
+        Row(children: [
+          SizedBox(width: 10),
+          Text("Thời gian bật:", style: TextStyle(fontSize: 18, fontFamily: "Mulish")),
+          SizedBox(width: 30),
+          GestureDetector(
+            onTap: () {
+              _selectTime(isLed, true);
+            },
+            child: Text(isLed ?  "${ledTimeOn.format(context)}" : "${pumpTimeOn.format(context)}",
+                style: TextStyle(fontSize: 18, fontFamily: "Mulish")),
+          ),
+        ]),
+        SizedBox(height: 20),
+        Row(children: [
+          SizedBox(width: 10),
+          Text("Thời gian tắt:", style: TextStyle(fontSize: 18, fontFamily: "Mulish")),
+          SizedBox(width: 35),
+          GestureDetector(
+            onTap: () {
+              _selectTime(isLed, false);
+            },
+            child: Text(isLed ?  "${ledTimeOff.format(context)}" : "${pumpTimeOff.format(context)}",
+                style: TextStyle(fontSize: 18, fontFamily: "Mulish")),
+          ),
+        ]),
+        SizedBox(height: 20),
 
-        SizedBox(height: 50),
-        ExpansionPanelList(
-          animationDuration: Duration(seconds: 2),
-          elevation: 2,
-
-        ),
       ],
     );
   }
 
-  void showBottomSheet(BoxConstraints constraints ){
+  void showBottomSheet(BoxConstraints constraints) {
     showMaterialModalBottomSheet(
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(10.0),
         ),
         context: context,
-        builder: (context) =>
-            bottomSheet(context, constraints, false));
+        builder: (context) => bottomSheet(context, constraints, false));
   }
-}
 
+
+}
 
 displayToastMessage(String message, BuildContext context) {
   Fluttertoast.showToast(msg: message);
