@@ -10,10 +10,10 @@ import 'package:happy_garden/api/device_api.dart';
 import 'package:http/http.dart' as http;
 
 Future<String> fetchKey(String server) async {
-  if (server == 'dinhkhanh412') {
-    return "aio_PrHt51fI5dDoYgZg87UqzAzFltXY";
+  if (server == 'BBC') {
+    return "aio_ACqM58B2mw1GCuwGHjb9jZseyOjU";
   } else {
-    return "aio_PrHt51fI5dDoYgZg87UqzAzFltXY";
+    return "aio_hBbR60GUY8DZ8Uie7NZp8lW0hiVl";
   }
   // final response = await http.get(Uri.parse('http://dadn.esp32thanhdanh.link'));
 
@@ -53,10 +53,10 @@ class MQTTManager extends ChangeNotifier {
     // _key = splitKey(response)[0];
     final Future<String> keyBBC = fetchKey(server);
     _key = await keyBBC;
-    // _user = "CSE_" + server;
-    // _topic = "CSE_" + server + "/feeds/#";
-    _user = server;
-    _topic = server + "/feeds/#";
+    _user = "CSE_" + server;
+    _topic = "CSE_" + server + "/feeds/#";
+    // _user = server;
+    // _topic = server + "/feeds/#";
     _identifier = identifier;
     _host = host;
     _client = MqttServerClient(_host, _key);
@@ -176,34 +176,33 @@ class MQTTManager extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> publishInputDevice(id, data, userId) async {
-    DeviceAPI deviceAPI = new DeviceAPI(userId);
+  void publishInputDevice(id, data)  {
     // if (_currentState.getAppConnectionState !=
     //     MQTTAppConnectionState.connectedSubscribed) {
     //   return;
     // }
-    if (((_user == "CSE_BBC") && (id > 10)) || ((_user == "CSE_BBC1") && (id < 11))) {
+    if (((_user == "BBC") && (id > 10)) || ((_user == "BBC1") && (id < 11))) {
       return;
     }
     switch (id) {
       case 1:
         String topic = "CSE_BBC/feeds/bk-iot-led";
         Feed feed = Feed(id.toString(), "LED", data, "");
-        deviceAPI.setDevice(feed);
+        //deviceAPI.setDevice(feed);
         String body = json.encode(feed.toJson());
         publish(body, topic);
         break;
       case 3:
         String topic = "CSE_BBC/feeds/bk-iot-lcd";
         Feed feed = Feed(id.toString(), "LCD", data, "");
-        await deviceAPI.setDevice(feed);
+        //await deviceAPI.setDevice(feed);
         String body = json.encode(feed.toJson());
         publish(body, topic);
         break;
       case 11:
         String topic = "CSE_BBC1/feeds/bk-iot-relay";
         Feed feed = Feed(id.toString(), "RELAY", data, "");
-        await deviceAPI.setDevice(feed);
+        //await deviceAPI.setDevice(feed);
         print("pushed");
         String body = json.encode(feed.toJson());
         publish(body, topic);
