@@ -1,17 +1,39 @@
 import 'package:flutter/material.dart';
+import 'package:happy_garden/ui/page/detail/model/Log.dart';
+import 'dart:async';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 
 class ReorderableViewPage extends StatefulWidget {
-  List<String> item = [
-    "Fire",
-    "Water",
-    "Air",
-    "Earth",
-  ];
+  List<String> item = ["Fire"];
+
   @override
   _ReorderableViewPageState createState() => _ReorderableViewPageState();
 }
 
+Future<Log> fetchLog() async {
+  var url = 'https://happygarden-bev02.herokuapp.com/log/get';
+
+  Map data = {'userId': '61063c60d95daa29e8639f65'};
+  //encode Map to JSON
+  var body = json.encode(data);
+
+  var response = await http.post(Uri.parse(url),
+      headers: {"Content-Type": "application/json"}, body: body);
+
+  if (response.statusCode == 200) {
+    var items = json.decode(response.body)['data']['history'];
+    for (var item in items) {
+      print(item);
+    }
+  } else {
+    throw Exception('Failed to load log');
+  }
+}
+
 class _ReorderableViewPageState extends State<ReorderableViewPage> {
+  Future<Log> futureLog;
+
   void reorderData(int oldindex, int newindex) {
     setState(() {
       if (newindex > oldindex) {
@@ -26,6 +48,12 @@ class _ReorderableViewPageState extends State<ReorderableViewPage> {
     setState(() {
       widget.item.sort();
     });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    futureLog = fetchLog();
   }
 
   @override
