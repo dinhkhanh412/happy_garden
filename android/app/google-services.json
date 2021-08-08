@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "791232423564",
+    "firebase_url": "https://happy-garden-275fa-default-rtdb.firebaseio.com",
+    "project_id": "happy-garden-275fa",
+    "storage_bucket": "happy-garden-275fa.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:791232423564:android:8551b9be65bdbacf0a3da9",
+        "android_client_info": {
+          "package_name": "com.happy_garden"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "791232423564-rboaecvel4u9vbt8ip4pgrgen0n9otld.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBe7IKBJqNkaFyY8CSPgz43Quv3QuC5BwI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "791232423564-rboaecvel4u9vbt8ip4pgrgen0n9otld.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

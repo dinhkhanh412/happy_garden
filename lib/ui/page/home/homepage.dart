@@ -145,11 +145,13 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     if (isLoading) {
       return MaterialApp(
-          title: "This is a StatafulWidget",
+          title: "Home",
           home: Scaffold(
               body: Align(
             alignment: Alignment.center,
+
             child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+
               CircularProgressIndicator(),
               SizedBox(
                 height: 10,
@@ -197,7 +199,8 @@ class _HomeScreenState extends State<HomeScreen> {
                   height: constraints.maxHeight * 0.025,
                 ),
                 Container(
-                  constraints: BoxConstraints.expand(height: constraints.maxHeight * 0.25),
+                  constraints: BoxConstraints.expand(
+                      height: constraints.maxHeight * 0.25),
                   child: imageSwiper(context, constraints),
                 ),
                 SizedBox(
@@ -217,6 +220,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             height: constraints.maxWidth * 0.3, width: constraints.maxWidth * 0.3),
                         child: card(context, "Kết nối", Icons.network_wifi,
                             connectivity ? "Online" : "Offline"),
+
                       ),
                     ),
                     GestureDetector(
@@ -224,11 +228,13 @@ class _HomeScreenState extends State<HomeScreen> {
                         showBottomSheet(constraints);
                       },
                       child: Container(
+
                           constraints: BoxConstraints.expand(
                               height: constraints.maxWidth * 0.3,
                               width: constraints.maxWidth * 0.6),
                           child: card(context, "MÁY BƠM", Icons.add_alarm_rounded,
                               pumpStart ? "ĐANG CHẠY" : "TẮT")),
+
                     ),
                   ],
                 ),
@@ -245,8 +251,10 @@ class _HomeScreenState extends State<HomeScreen> {
                       },
                       child: Container(
                         constraints: BoxConstraints.expand(
+
                             height: constraints.maxWidth * 0.3, width: constraints.maxWidth * 0.3),
                         child: card(context, "Độ ẩm", Icons.cloud, humidity.toString()),
+
                       ),
                     ),
                     GestureDetector(
@@ -254,6 +262,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         displayToastMessage("Nhiệt độ", context);
                       },
                       child: Container(
+
                         constraints: BoxConstraints.expand(
                             height: constraints.maxWidth * 0.3, width: constraints.maxWidth * 0.3),
                         child: card(context, "Nhiệt độ", Icons.thermostat_sharp,
@@ -269,6 +278,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             height: constraints.maxWidth * 0.3, width: constraints.maxWidth * 0.3),
                         child: card(context, "Độ ẩm đất", Icons.eco, waterLv.toString()),
                       ),
+
                     ),
                   ],
                 ),
@@ -290,23 +300,27 @@ class _HomeScreenState extends State<HomeScreen> {
                             builder: (context) => bottomSheet(context, constraints, true));
                       },
                       child: Container(
+
                           constraints: BoxConstraints.expand(
                               height: constraints.maxWidth * 0.3,
                               width: constraints.maxWidth * 0.6),
                           child: card(context, "Đèn LED", Icons.add_alarm_rounded,
                               lightOn ? "BẬT" : "TẮT")),
+
                     ),
                     GestureDetector(
                       onTap: () {
                         displayToastMessage("Cường độ sáng", context);
                       },
                       child: Container(
+
                           constraints: BoxConstraints.expand(
                               height: constraints.maxWidth * 0.3,
                               width: constraints.maxWidth * 0.3),
                           child:
                               card(context, "Cường độ sáng", Icons.lightbulb, lightLv.toString())),
                     )
+
                   ],
                 ),
               ],
@@ -316,6 +330,7 @@ class _HomeScreenState extends State<HomeScreen> {
       );
     });
   }
+
 
   void sendLight(bool isOn) {
     _manager_1.publishInputDevice(1, isOn ? "1" : "0");
@@ -329,6 +344,7 @@ class _HomeScreenState extends State<HomeScreen> {
     setState(() {
       pumpStart = isOn;
     });
+
   }
 
   //function
@@ -341,8 +357,10 @@ class _HomeScreenState extends State<HomeScreen> {
   void _configureAndConnect() async {
     String server1 = 'server_1';
     String server2 = 'server_2';
+
     await _manager_1.initializeMQTTClient(identifier: server1, server: "BBC");
     await _manager_2.initializeMQTTClient(identifier: server2, server: "BBC1");
+
     _manager_1.connect();
     _manager_2.connect();
   }

@@ -18,15 +18,21 @@ class WelcomePage extends StatelessWidget {
               SizedBox(height: constraints.maxHeight * 0.4),
               Text("Welcome to ",
                   style: GoogleFonts.mulish(
-                      textStyle: TextStyle(color: Colors.white), fontSize: 26, fontWeight: FontWeight.w900)),
+                      textStyle: TextStyle(color: Colors.white),
+                      fontSize: 26,
+                      fontWeight: FontWeight.w900)),
               Text("Happy Garden",
                   style: GoogleFonts.mulish(
-                      textStyle: TextStyle(color: Colors.white), fontSize: 32, fontWeight: FontWeight.w900)),
+                      textStyle: TextStyle(color: Colors.white),
+                      fontSize: 32,
+                      fontWeight: FontWeight.w900)),
               SizedBox(height: 50),
               TextButton(
                 style: ButtonStyle(
-                  backgroundColor: MaterialStateProperty.all<Color>(Colors.white),
-                  minimumSize: MaterialStateProperty.all<Size>(Size(constraints.maxWidth * 0.95, 50)),
+                  backgroundColor:
+                      MaterialStateProperty.all<Color>(Colors.white),
+                  minimumSize: MaterialStateProperty.all<Size>(
+                      Size(constraints.maxWidth * 0.95, 50)),
                 ),
                 onPressed: () {},
                 child: Text('TextButton'),
