@@ -6,12 +6,19 @@ import 'package:happy_garden/ui/page/detail/widget/info_screen.dart';
 import 'package:happy_garden/ui/page/detail/widget/reorderable_view.dart';
 import 'package:happy_garden/ui/page/detail/widget/settings_screen.dart';
 
+import '../home/homepage.dart';
+
 class DesignCourseHomeScreen extends StatefulWidget {
+  final String UID;
+  final String gardenName;
+
+  DesignCourseHomeScreen({Key key, this.UID, this.gardenName}) : super(key: key);
   @override
   _DesignCourseHomeScreenState createState() => _DesignCourseHomeScreenState();
 }
 
 class _DesignCourseHomeScreenState extends State<DesignCourseHomeScreen> {
+  int selectedIndex = 1;
   int cupertinoTabBarValue = 1;
   int cupertinoTabBarValueGetter() => cupertinoTabBarValue;
 
@@ -85,7 +92,30 @@ class _DesignCourseHomeScreenState extends State<DesignCourseHomeScreen> {
             ),
           ],
         ),
+        bottomNavigationBar: BottomNavigationBar(
+          type: BottomNavigationBarType.fixed,
+          currentIndex: this.selectedIndex,
+          items: [
+            BottomNavigationBarItem(
+              icon: Icon(Icons.home),
+              label: "Home"
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.business),
+              label: "Detail"
+            ),
+          ],
+          onTap: (int index) {
+            if (index == 0) {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => HomeScreen(UID: widget.UID, gardenName: widget.gardenName)),
+              );
+            }
+          },
+        ),
       ),
+
     );
   }
 

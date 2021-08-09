@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:custom_switch/custom_switch.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -17,6 +18,8 @@ import 'package:happy_garden/api/device_api.dart';
 import 'package:happy_garden/models/Feed.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_spinbox/cupertino.dart';
+import '../detail/detailpage.dart';
 
 class HomeScreen extends StatefulWidget {
   final String UID;
@@ -29,8 +32,12 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  int selectedIndex = 0;
   MQTTManager _manager_1 = new MQTTManager();
   MQTTManager _manager_2 = new MQTTManager();
+
+  DeviceAuto pump;
+  DeviceAuto led;
 
   DeviceAPI deviceAPI;
   ScheduleAPI scheduleAPI;
@@ -51,10 +58,14 @@ class _HomeScreenState extends State<HomeScreen> {
   bool pumpAuto = false;
   TimeOfDay pumpTimeOn = TimeOfDay(hour: 7, minute: 15);
   TimeOfDay pumpTimeOff = TimeOfDay(hour: 7, minute: 15);
+  double pumpMaxOff = 0;
+  double pumpMinOff = 0;
 
   bool ledAuto = false;
   TimeOfDay ledTimeOn = TimeOfDay(hour: 7, minute: 15);
   TimeOfDay ledTimeOff = TimeOfDay(hour: 7, minute: 15);
+  double ledMaxOff = 0;
+  double ledMinOff = 0;
 
   BoxConstraints constraints;
 
@@ -327,6 +338,29 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ),
         ),
+        bottomNavigationBar: BottomNavigationBar(
+          type: BottomNavigationBarType.fixed,
+          currentIndex: this.selectedIndex,
+          items: [
+            BottomNavigationBarItem(
+              icon: Icon(Icons.home),
+              label: "Home"
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.business),
+              label: "Detail"
+            ),
+
+          ],
+          onTap: (int index) {
+            if (index == 1) {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => DesignCourseHomeScreen(UID: widget.UID, gardenName: widget.gardenName)),
+              );
+            }
+          },
+        ),
       );
     });
   }
@@ -413,20 +447,25 @@ class _HomeScreenState extends State<HomeScreen> {
     dynamic scheduleStatus =  await scheduleAPI.getSchedule();
     dynamic scheduleData = scheduleStatus['data'];
 
-    DeviceAuto pump = new DeviceAuto.fromJson(scheduleData[1]);
+    pump = new DeviceAuto.fromJson(scheduleData[1]);
     String pumpOn = pump.hOn;
     String pumpOff = pump.hOff;
     pumpTimeOn = TimeOfDay(hour:int.parse(pumpOn.split(":")[0]),minute: int.parse(pumpOn.split(":")[1]));
     pumpTimeOff = TimeOfDay(hour:int.parse(pumpOff.split(":")[0]),minute: int.parse(pumpOff.split(":")[1]));
     pumpAuto = pump.status;
+    pumpMinOff = double.parse(pump.on);
+    pumpMaxOff = double.parse(pump.off);
 
-    DeviceAuto led = new DeviceAuto.fromJson(scheduleData[2]);
+
+    led = new DeviceAuto.fromJson(scheduleData[2]);
     String ledOn = led.hOn;
     String ledOff = led.hOff;
-    pumpTimeOn = TimeOfDay(hour:int.parse(ledOn.split(":")[0]),minute: int.parse(ledOn.split(":")[1]));
-    pumpTimeOff = TimeOfDay(hour:int.parse(ledOff.split(":")[0]),minute: int.parse(ledOff.split(":")[1]));
+    ledTimeOn = TimeOfDay(hour:int.parse(ledOn.split(":")[0]),minute: int.parse(ledOn.split(":")[1]));
+    ledTimeOff = TimeOfDay(hour:int.parse(ledOff.split(":")[0]),minute: int.parse(ledOff.split(":")[1]));
     ledAuto = led.status;
-
+    ledMinOff = double.parse(led.on);
+    ledMaxOff = double.parse(led.off);
+    
     setState(() {
       connectivity = true;
       isLoading = false;
@@ -541,7 +580,38 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ]),
         SizedBox(height: 20),
-
+        Row(children: [
+          SizedBox(width: 10),
+          Text("Giá trị nhỏ nhất:", style: TextStyle(fontSize: 18, fontFamily: "Mulish")),
+          SizedBox(width: 20),
+        ]),
+        CupertinoSpinBox(
+          min: 0,
+          max: 1000,
+          value: isLed ? ledMinOff : pumpMinOff,
+          onChanged: (value) => {
+            if (isLed) ledMinOff = value
+            else pumpMinOff = value,
+            sendShedule()
+          },
+        ),
+        SizedBox(height: 20),
+        Row(children: [
+          SizedBox(width: 10),
+          Text("Giá trị lớn nhất:", style: TextStyle(fontSize: 18, fontFamily: "Mulish")),
+          SizedBox(width: 20),
+        ]),
+        CupertinoSpinBox(
+          min: 0,
+          max: 1000,
+          value: isLed ? ledMaxOff : pumpMaxOff,
+          onChanged: (value) => {
+            if (isLed) ledMaxOff = value
+            else pumpMaxOff = value,
+            sendShedule()
+          },
+        ),
+        SizedBox(height: 20),
       ],
     );
   }
@@ -553,6 +623,10 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
         context: context,
         builder: (context) => bottomSheet(context, constraints, false));
+  }
+
+  void sendShedule(){
+
   }
 
 

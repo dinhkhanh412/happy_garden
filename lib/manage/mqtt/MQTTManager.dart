@@ -11,9 +11,9 @@ import 'package:http/http.dart' as http;
 
 Future<String> fetchKey(String server) async {
   if (server == 'BBC') {
-    return "aio_ACqM58B2mw1GCuwGHjb9jZseyOjU";
+    return "aio_eIzx84QrfGct3jkJM5aW02aKAIbB";
   } else {
-    return "aio_hBbR60GUY8DZ8Uie7NZp8lW0hiVl";
+    return "aio_GOii70J59sAf8pkCYFQzT9q6SIXk";
   }
   // final response = await http.get(Uri.parse('http://dadn.esp32thanhdanh.link'));
 

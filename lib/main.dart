@@ -15,8 +15,6 @@ import 'package:happy_garden/ui/page/detail/detailpage.dart';
 
 
 
-
-
 import 'models/global_schedule.dart';void main() {
   setupLocator();
   runApp(
@@ -46,7 +44,7 @@ class MyApp extends StatelessWidget {
           routes: {
             // '/': (BuildContext context) =>
             //     HomeScreen(UID: "61063c60d95daa29e8639f65", gardenName: "Home")
-            '/': (BuildContext context) => DesignCourseHomeScreen()
+            '/': (BuildContext context) => HomeScreen(UID: "61063c60d95daa29e8639f65", gardenName: "Home")
             // '/': (BuildContext context) => SignInScreen()
           }),
     );
